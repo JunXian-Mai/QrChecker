@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout
+  xmlns:android="http://schemas.android.com/apk/res/android">
+
+  <data>
+
+    <variable
+      name="uiUtils"
+      type="com.markensic.sdk.ui.Ui" />
+  </data>
+
+  <LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <TextView
+      android:layout_width="match_parent"
+      android:layout_height="80px"
+      android:background="@color/purple_200"
+      android:text="状态栏" />
+
+    <TextView
+      android:layout_width="match_parent"
+      android:layout_height="0dp"
+      android:layout_weight="1"
+      android:background="@color/teal_200"
+      android:text="Hello World!" />
+
+    <TextView
+      android:layout_width="match_parent"
+      android:layout_height="0dp"
+      android:layout_weight="1"
+      android:background="@color/teal_700"
+      android:gravity="bottom"
+      android:text="Hello World!" />
+
+    <TextView
+      android:id="@+id/navigation"
+      android:layout_width="match_parent"
+      android:layout_height="126px"
+      android:background="@color/purple_700"
+      android:gravity="center"
+      android:text="导航栏" />
+
+  </LinearLayout>
+</layout>
