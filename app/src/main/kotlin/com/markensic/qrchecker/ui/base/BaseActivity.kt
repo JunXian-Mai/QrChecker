@@ -11,9 +11,9 @@ abstract class BaseActivity : AppCompatActivity() {
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
-    setContentView(bindingView())
     Ui.setSystemBar(window)
-    Log.d("BaseActivity", "statusBarSize: ${Ui.statusBarSize}")
-    Log.d("BaseActivity", "navigationBarSize : ${Ui.navigationBarSize}")
+    setContentView(bindingView())
+//    Log.d("BaseActivity", "statusBarSize: ${Ui.statusBarSize}")
+//    Log.d("BaseActivity", "navigationBarSize : ${Ui.navigationBarSize}")
   }
 }

@@ -33,4 +33,14 @@ object App {
         throw IllegalArgumentException("Activity Not Found, Application Should Implement LibStackContext")
       }
     }
+
+  fun initApplication(a: Application) {
+    if (_a != a) {
+      synchronized(App::class) {
+        if (_a != a) {
+          _a = a
+        }
+      }
+    }
+  }
 }

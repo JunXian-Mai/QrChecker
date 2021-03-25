@@ -10,28 +10,36 @@ fun Int.toAtMostMeasureSpec() =
   View.MeasureSpec.makeMeasureSpec(this, View.MeasureSpec.AT_MOST)
 
 
-fun View.defaultMeasureWidth(parentView: ViewGroup): Int {
+fun View.defaultMeasureWidth(parentView: ViewGroup, checkZero: Boolean = true): Int {
   return when (layoutParams.width) {
     ViewGroup.LayoutParams.MATCH_PARENT -> parentView.measuredWidth.toExactlyMeasureSpec()
     ViewGroup.LayoutParams.WRAP_CONTENT -> parentView.measuredWidth.toAtMostMeasureSpec()
-    0 -> throw IllegalAccessError("Need special treatment for $this")
+    0 -> if (checkZero) {
+      throw IllegalAccessError("Need special treatment for $this")
+    } else {
+      0.toExactlyMeasureSpec()
+    }
     else -> layoutParams.width.toExactlyMeasureSpec()
   }
 }
 
-fun View.defaultMeasureHeight(parentView: ViewGroup): Int {
+fun View.defaultMeasureHeight(parentView: ViewGroup, checkZero: Boolean = true): Int {
   return when (layoutParams.height) {
     ViewGroup.LayoutParams.MATCH_PARENT -> parentView.measuredHeight.toExactlyMeasureSpec()
     ViewGroup.LayoutParams.WRAP_CONTENT -> parentView.measuredHeight.toAtMostMeasureSpec()
-    0 -> throw IllegalAccessError("Need special treatment for $this")
-    else -> layoutParams.width.toExactlyMeasureSpec()
+    0 -> if (checkZero) {
+      throw IllegalAccessError("Need special treatment for $this")
+    } else {
+      0.toExactlyMeasureSpec()
+    }
+    else -> layoutParams.height.toExactlyMeasureSpec()
   }
 }
 
-fun ViewGroup.autoMeasureChildView(childView: View) {
+fun ViewGroup.autoMeasureChildView(childView: View, checkZero: Boolean = true) {
   childView.measure(
-    childView.defaultMeasureWidth(this),
-    childView.defaultMeasureHeight(this)
+    childView.defaultMeasureWidth(this, checkZero),
+    childView.defaultMeasureHeight(this, checkZero)
   )
 }
 

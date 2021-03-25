@@ -9,6 +9,7 @@ import com.markensic.qrchecker.R
 import com.markensic.qrchecker.databinding.ActivityMainBinding
 import com.markensic.qrchecker.ui.base.BaseActivity
 import com.markensic.qrchecker.ui.base.dp
+import com.markensic.qrchecker.ui.custom.MainLayout
 import com.markensic.qrchecker.viewmodel.MainViewModel
 
 class MainActivity : BaseActivity() {
@@ -23,6 +24,8 @@ class MainActivity : BaseActivity() {
       null,
       false
     )
+    val mainLayout = MainLayout(this)
+    binding.container.addView(mainLayout)
     return binding.root
   }
 }

@@ -1,5 +1,6 @@
 package com.markensic.sdk.ui
 
+import android.content.Context
 import android.content.res.Resources
 import android.graphics.Color
 import android.graphics.Rect
@@ -44,10 +45,29 @@ object Ui {
       if (_navigationBarSize == NOT_MEASURED) {
         synchronized(Ui::class) {
           if (_navigationBarSize == NOT_MEASURED) {
-            App.currentActivity?.windowManager?.apply {
+            val navigationBarSystemSize = Resources.getSystem().let { res ->
+              res.getIdentifier(
+                "navigation_bar_height",
+                "dimen",
+                "android"
+              ).let {
+                res.getDimensionPixelSize(it)
+              }
+            }
+            (App.sApplication.getSystemService(Context.WINDOW_SERVICE) as WindowManager ).apply {
               val windowFullHeight = Display.realHeight
               val windowHeight = defaultDisplay.height
-              _navigationBarSize = (windowFullHeight - windowHeight - statusBarSize).coerceAtLeast(0)
+              var remainEffectHeight = windowFullHeight - windowHeight
+              if (remainEffectHeight > navigationBarSystemSize) {
+                remainEffectHeight -= statusBarSize
+              }
+
+              _navigationBarSize = if (remainEffectHeight - statusBarSize <= 0) {
+                // navigationBar hide
+                0
+              } else {
+                remainEffectHeight.coerceAtLeast(navigationBarSystemSize)
+              }
             }
           }
         }
