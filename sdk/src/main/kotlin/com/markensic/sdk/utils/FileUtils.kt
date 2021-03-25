@@ -6,9 +6,11 @@ import android.os.Build
 import android.os.FileUtils
 import android.provider.OpenableColumns
 import com.markensic.sdk.global.App
+import okio.*
 import java.io.File
 import java.io.FileInputStream
 import java.io.FileOutputStream
+import java.io.InputStream
 import java.net.URI
 import java.nio.channels.FileChannel
 
@@ -78,38 +80,41 @@ object FileUtils {
       }
     } else if (uri.scheme == ContentResolver.SCHEME_CONTENT) {
       if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-        //AppLog.d(App.sLogTag, "uri cast to file more than N")
-        val contentResolver = App.sApplication.getContentResolver()
+        val contentResolver = App.sApplication.contentResolver
         val cursor = contentResolver.query(uri, null, null, null, null)
         cursor?.use {
           if (it.moveToFirst()) {
-            val ios = contentResolver.openInputStream(uri)
-            it.getString(it.getColumnIndex(OpenableColumns.DISPLAY_NAME)).let { fileName ->
-              if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                //AppLog.d(App.sLogTag, "uri cast to file in Q")
-                val file =
-                  File("${App.sApplication.externalCacheDir!!.absolutePath}/$fileName")
-                val fos = FileOutputStream(file)
-                ios?.let {
-                  FileUtils.copy(ios, fos)
+            val uriInputStream = contentResolver.openInputStream(uri)
+            if (uriInputStream != null) {
+              it.getString(it.getColumnIndex(OpenableColumns.DISPLAY_NAME))
+                .let { fileName ->
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                  val file = File("${App.sApplication.externalCacheDir!!.absolutePath}/$fileName")
+                  val fos = FileOutputStream(file)
+                  uriInputStream.use {
+                    fos.use {
+                      FileUtils.copy(uriInputStream, fos)
+                    }
+                  }
+                  file
+                } else {
+                  val file = File(App.sApplication.filesDir, fileName)
+                  uriInputStream.use {
+                    FileOutputStream(file).sink().buffer().use { sink ->
+                      sink.write(uriInputStream.readBytes())
+                    }
+                  }
+                  file
                 }
-                file
-              } else {
-                //AppLog.d(App.sLogTag, "uri cast to file less than Q")
-                val file = File(App.sApplication.filesDir, fileName)
-                val fcos = FileOutputStream(file).channel
-                val fcin: FileChannel = (ios as FileInputStream).channel
-                fcos.transferFrom(fcin, 0, fcin.size())
-                file
               }
+            } else {
+              null
             }
           } else {
-            //AppLog.d(App.sLogTag, "this uri can not find file")
             null
           }
         }
       } else {
-        //AppLog.d(App.sLogTag, "uri cast to file less than N")
         File(URI(uri.toString()))
       }
     } else {

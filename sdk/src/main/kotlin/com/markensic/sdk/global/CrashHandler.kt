@@ -46,6 +46,7 @@ object CrashHandler : Thread.UncaughtExceptionHandler {
             packInfo.versionCode
           }
         }
+
         builder.append(
           """
           Package Information:
@@ -55,7 +56,8 @@ object CrashHandler : Thread.UncaughtExceptionHandler {
         """.trimIndent()
         )
 
-        builder.append("Hardware Information:\n")
+        builder.append(
+          "Hardware Information:\n")
         builder.append(
           """
             DISPLAY: ${
@@ -82,6 +84,7 @@ object CrashHandler : Thread.UncaughtExceptionHandler {
     return tr.let { ex ->
       val fileName =
         "Crash_${SimpleDateFormat("yyyy年MM月dd日 HH时mm分ss秒").format(Date())}_${tr::class.java.simpleName}.log"
+
       FileUtils.createFile(path + fileName).also { file ->
         file.printWriter().use { writer ->
           writer.println(
