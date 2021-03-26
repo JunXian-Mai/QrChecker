@@ -1,7 +1,6 @@
 package com.markensic.qrchecker.ui.base
 
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import com.markensic.sdk.ui.Ui

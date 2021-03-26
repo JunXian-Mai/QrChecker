@@ -96,17 +96,19 @@ object CrashHandler : Thread.UncaughtExceptionHandler {
   private fun handleException(t: Thread, tr: Throwable): Boolean {
     return tr.let { ex ->
       val fileName =
-        "Crash_${SimpleDateFormat("yyyy年MM月dd日 HH时mm分ss秒").format(Date())}_${tr::class.java.simpleName}.log"
+        "Crash_${System.currentTimeMillis()}_${tr::class.java.simpleName}.log"
 
       FileUtils.createFile(path + fileName).also { file ->
         file.printWriter().use { writer ->
           writer.println(
             """
-              Crash Time:
+              Phone Crash System Time:
               ${SimpleDateFormat("yyyy/MM/dd HH:mm:ss.SSS").format(Date())}${"\n"}
             """.trimIndent()
           )
-          writer.println(collectDeviceInfo())
+          writer.println(
+            collectDeviceInfo()
+          )
           writer.println(
             """
               Thread: ${t.name}

@@ -6,13 +6,11 @@ import android.os.Build
 import android.os.FileUtils
 import android.provider.OpenableColumns
 import com.markensic.sdk.global.App
-import okio.*
+import okio.buffer
+import okio.sink
 import java.io.File
-import java.io.FileInputStream
 import java.io.FileOutputStream
-import java.io.InputStream
 import java.net.URI
-import java.nio.channels.FileChannel
 
 object FileUtils {
   val sDefaultPath =
@@ -88,25 +86,25 @@ object FileUtils {
             if (uriInputStream != null) {
               it.getString(it.getColumnIndex(OpenableColumns.DISPLAY_NAME))
                 .let { fileName ->
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                  val file = File("${App.sApplication.externalCacheDir!!.absolutePath}/$fileName")
-                  val fos = FileOutputStream(file)
-                  uriInputStream.use {
-                    fos.use {
-                      FileUtils.copy(uriInputStream, fos)
+                  if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                    val file = File("${App.sApplication.externalCacheDir!!.absolutePath}/$fileName")
+                    val fos = FileOutputStream(file)
+                    uriInputStream.use {
+                      fos.use {
+                        FileUtils.copy(uriInputStream, fos)
+                      }
                     }
-                  }
-                  file
-                } else {
-                  val file = File(App.sApplication.filesDir, fileName)
-                  uriInputStream.use {
-                    FileOutputStream(file).sink().buffer().use { sink ->
-                      sink.write(uriInputStream.readBytes())
+                    file
+                  } else {
+                    val file = File(App.sApplication.filesDir, fileName)
+                    uriInputStream.use {
+                      FileOutputStream(file).sink().buffer().use { sink ->
+                        sink.write(uriInputStream.readBytes())
+                      }
                     }
+                    file
                   }
-                  file
                 }
-              }
             } else {
               null
             }

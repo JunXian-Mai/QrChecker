@@ -54,7 +54,7 @@ object Ui {
                 res.getDimensionPixelSize(it)
               }
             }
-            (App.sApplication.getSystemService(Context.WINDOW_SERVICE) as WindowManager ).apply {
+            (App.sApplication.getSystemService(Context.WINDOW_SERVICE) as WindowManager).apply {
               val windowFullHeight = Display.realHeight
               val windowHeight = defaultDisplay.height
               var remainEffectHeight = windowFullHeight - windowHeight
