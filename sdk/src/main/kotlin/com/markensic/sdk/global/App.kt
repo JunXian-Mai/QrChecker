@@ -2,6 +2,7 @@ package com.markensic.sdk.global
 
 import android.app.Activity
 import android.app.Application
+import android.content.pm.ApplicationInfo
 
 object App {
 
@@ -19,6 +20,8 @@ object App {
       }
       return _a ?: throw IllegalArgumentException("Application Not Found")
     }
+
+  val isDebug = _a?.applicationInfo?.flags?.and(ApplicationInfo.FLAG_DEBUGGABLE) != 0
 
   var currentActivity: Activity? = null
     get() {

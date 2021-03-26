@@ -5,7 +5,9 @@ import android.net.Uri
 import android.os.Build
 import android.os.FileUtils
 import android.provider.OpenableColumns
+import android.util.Log
 import com.markensic.sdk.global.App
+import com.markensic.sdk.global.sdkLoge
 import okio.buffer
 import okio.sink
 import java.io.File
@@ -16,15 +18,50 @@ object FileUtils {
   val sDefaultPath =
     App.sApplication.getExternalFilesDir(null)!!.absolutePath + File.separator
 
-  fun createFile(path: String): File {
+  private fun create(path: String): File {
     return File(path).also {
-      if (!it.exists()) {
-        val dirPath = path.substring(0, path.lastIndexOf("/"))
-        createFileDir(dirPath)
-
-        if (path != dirPath) {
-          it.createNewFile()
+      if ('/' == path.last()) {
+        if (!it.exists() || !it.isDirectory) {
+          if (makeDirectory(path)) {
+            sdkLoge("create directory error maybe exists homonym file")
+          }
         }
+      } else {
+        if (!it.exists() || it.isDirectory) {
+          val dirPath = path.substring(0, path.lastIndexOf("/") + 1)
+          makeDirectory(dirPath)
+          if (it.createNewFile()) {
+            sdkLoge("create file error maybe exists homonym directory")
+          }
+        }
+      }
+    }
+  }
+
+  fun createNewFile(path: String): File? {
+    val file = create(path)
+    return if (file.exists() && !file.isDirectory) {
+      file
+    } else {
+      sdkLoge("createNewFile file error maybe exists homonym directory")
+      null
+    }
+  }
+
+  fun makeDirectory(path: String): Boolean {
+    return if ('/' == path.last()) {
+       File(path).mkdirs()
+    } else {
+      throw IllegalAccessError("$path is not a directory")
+    }
+  }
+
+  fun deleteFile(path: String): Boolean {
+    return File(path).let {
+      if (it.exists()) {
+        it.deleteRecursively()
+      } else {
+        true
       }
     }
   }
@@ -39,34 +76,20 @@ object FileUtils {
     }
   }
 
-  fun createFileDir(path: String): Boolean {
-    return File(path).mkdirs()
-  }
-
-  fun deleteFile(path: String): Boolean {
-    return File(path).let {
-      if (it.exists()) {
-        it.deleteRecursively()
-      } else {
-        true
-      }
-    }
-  }
-
   fun appendToFile(path: String, text: String) {
-    createFile(path).also {
+    createNewFile(path)?.also {
       it.appendText(text)
     }
   }
 
   fun writeToFile(path: String, text: String) {
-    createFile(path).also {
+    createNewFile(path)?.also {
       it.writeText(String())
     }
   }
 
   fun writeToFile(path: String, array: ByteArray) {
-    createFile(path).also {
+    createNewFile(path)?.also {
       it.writeBytes(array)
     }
   }
