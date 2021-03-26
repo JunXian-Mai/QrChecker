@@ -13,7 +13,7 @@ import kotlin.system.exitProcess
 object CrashHandler : Thread.UncaughtExceptionHandler {
 
   private val path =
-    App.sApplication.getExternalFilesDir(null)!!.absolutePath + File.separator + "crashfolder" + File.separator
+    App.sApplication.getExternalFilesDir(null)!!.absolutePath + File.separator + "crashFolder" + File.separator
 
   private val systemHandler = Thread.getDefaultUncaughtExceptionHandler()
 
@@ -57,7 +57,8 @@ object CrashHandler : Thread.UncaughtExceptionHandler {
         )
 
         builder.append(
-          "Hardware Information:\n")
+          "Hardware Information:\n"
+        )
         builder.append(
           """
             DISPLAY: ${
@@ -70,9 +71,21 @@ object CrashHandler : Thread.UncaughtExceptionHandler {
 
         Build::class.java.declaredFields.forEach {
           it.isAccessible = true
+          var value = ""
+          if (it.type == Array<String>::class.java) {
+            (it.get(null) as Array<*>).forEach { item ->
+              value += "$item ,"
+            }
+            if (value.isNotBlank()) {
+              value = value.substring(0, value.length - 2)
+            }
+          } else {
+            value = it.get(null).toString()
+          }
+
           builder.append(
             """
-              ${it.name}: ${it.get(null)}${"\n"}
+              ${it.name}: $value${"\n"}
             """.trimIndent()
           )
         }
@@ -100,7 +113,7 @@ object CrashHandler : Thread.UncaughtExceptionHandler {
               Exception StackTrace:
             """.trimIndent()
           )
-          ex.forEarch { cause ->
+          ex.forEach { cause ->
             cause.printStackTrace(writer)
           }
         }
@@ -111,10 +124,10 @@ object CrashHandler : Thread.UncaughtExceptionHandler {
     }
   }
 
-  private fun Throwable.forEarch(function: (cause: Throwable) -> Unit) {
+  private fun Throwable.forEach(function: (cause: Throwable) -> Unit) {
     this.also {
       function(it)
-    }.cause?.forEarch(function)
+    }.cause?.forEach(function)
   }
 
   interface UploadListener {

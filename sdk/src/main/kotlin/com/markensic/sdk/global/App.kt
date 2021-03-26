@@ -20,14 +20,10 @@ object App {
       return _a ?: throw IllegalArgumentException("Application Not Found")
     }
 
-  fun initStackContext(c: LibStackContext) {
-    sApplication?.registerActivityLifecycleCallbacks(c.getActivityStack())
-  }
-
   var currentActivity: Activity? = null
     get() {
-      return if (sApplication is LibStackContext) {
-        (sApplication as LibStackContext).getActivityStack().stack.peek().get()
+      return if (_a is LibStackContext) {
+        (_a as LibStackContext).getActivityStack().stack.peek().get()
           ?: throw RuntimeException("Activity Not Create Or Application Not registerActivityLifecycleCallbacks")
       } else {
         throw IllegalArgumentException("Activity Not Found, Application Should Implement LibStackContext")
@@ -42,5 +38,9 @@ object App {
         }
       }
     }
+    if (a is LibStackContext) {
+      _a?.registerActivityLifecycleCallbacks(a.getActivityStack())
+    }
+    CrashHandler.init()
   }
 }

@@ -11,6 +11,7 @@ import com.markensic.qrchecker.ui.base.BaseActivity
 import com.markensic.qrchecker.ui.base.dp
 import com.markensic.qrchecker.ui.custom.MainLayout
 import com.markensic.qrchecker.viewmodel.MainViewModel
+import java.lang.NullPointerException
 
 class MainActivity : BaseActivity() {
 
