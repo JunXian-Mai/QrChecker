@@ -3,7 +3,7 @@ package com.markensic.sdk.framework.reflect
 import java.lang.reflect.Field
 import java.lang.reflect.Modifier
 
-fun <T> Class<T>.rejectFinalModifier(fieldName: String): Field? {
+fun <T> Class<T>.getAndRemoveFinalModifier(fieldName: String): Field {
   return try {
     val field = getDeclaredField(fieldName).also {
       it.isAccessible = true
@@ -12,7 +12,7 @@ fun <T> Class<T>.rejectFinalModifier(fieldName: String): Field? {
       accessFlagsField.setInt(it, it.modifiers.and(Modifier.FINAL.inv()))
     }
     field
-  } catch (e: NoSuchFieldException) {
-    null
+  } catch (e: Exception) {
+    throw e
   }
 }

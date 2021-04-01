@@ -19,7 +19,7 @@ class ModifyThreadPool(
   maximumPoolSize,
   keepAliveTime,
   unit,
-  ResizableCapacityLinkedBlockIngQueue<Runnable>(workQueue),
+  ResizableCapacityLinkedBlockingQueue<Runnable>(workQueue),
   threadFactory,
   handler
 ) {
@@ -30,8 +30,8 @@ class ModifyThreadPool(
   }
 
   override fun execute(command: Runnable?) {
-    if (queue is ResizableCapacityLinkedBlockIngQueue) {
-      (queue as ResizableCapacityLinkedBlockIngQueue<Runnable>).also { queue ->
+    if (queue is ResizableCapacityLinkedBlockingQueue) {
+      (queue as ResizableCapacityLinkedBlockingQueue<Runnable>).also { queue ->
         if (queue.remainingCapacity() - corePoolSize <= 0) {
           val allSize = queue.size + queue.remainingCapacity()
           if (!isSingle) {
