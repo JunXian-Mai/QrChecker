@@ -10,6 +10,7 @@ fun Int.toAtMostMeasureSpec() =
   View.MeasureSpec.makeMeasureSpec(this, View.MeasureSpec.AT_MOST)
 
 
+@Throws(IllegalAccessError::class)
 fun View.defaultMeasureWidth(parentView: ViewGroup, checkZero: Boolean = true): Int {
   return when (layoutParams.width) {
     ViewGroup.LayoutParams.MATCH_PARENT -> parentView.measuredWidth.toExactlyMeasureSpec()
@@ -23,6 +24,7 @@ fun View.defaultMeasureWidth(parentView: ViewGroup, checkZero: Boolean = true): 
   }
 }
 
+@Throws(IllegalAccessError::class)
 fun View.defaultMeasureHeight(parentView: ViewGroup, checkZero: Boolean = true): Int {
   return when (layoutParams.height) {
     ViewGroup.LayoutParams.MATCH_PARENT -> parentView.measuredHeight.toExactlyMeasureSpec()

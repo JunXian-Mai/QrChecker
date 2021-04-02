@@ -48,6 +48,7 @@ object FileUtils {
     }
   }
 
+  @Throws(IllegalAccessError::class)
   fun makeDirectory(path: String): Boolean {
     return if ('/' == path.last()) {
        File(path).mkdirs()
@@ -84,7 +85,7 @@ object FileUtils {
 
   fun writeToFile(path: String, text: String) {
     createNewFile(path)?.also {
-      it.writeText(String())
+      it.writeText(text)
     }
   }
 
@@ -94,6 +95,7 @@ object FileUtils {
     }
   }
 
+  @Throws(RuntimeException::class)
   fun uriCastFile(uri: Uri): File? {
     return if (uri.scheme == ContentResolver.SCHEME_FILE) {
       uri.path?.let {

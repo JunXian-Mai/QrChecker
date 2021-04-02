@@ -23,17 +23,17 @@ object App {
 
   val isDebug = _a?.applicationInfo?.flags?.and(ApplicationInfo.FLAG_DEBUGGABLE) != 0
 
-  var currentActivity: Activity? = null
+  val currentActivity: Activity
     get() {
       return if (_a is LibStackContext) {
-        (_a as LibStackContext).getActivityStack().stack.peek().get()
+        (_a as LibStackContext).activityStack.stack.peek().get()
           ?: throw RuntimeException("Activity Not Create Or Application Not registerActivityLifecycleCallbacks")
       } else {
         throw IllegalArgumentException("Activity Not Found, Application Should Implement LibStackContext")
       }
     }
 
-  fun initApplication(a: Application) {
+  fun initApplication(a: Application, listener: CrashHandler.UploadListener? = null) {
     if (_a != a) {
       synchronized(App::class) {
         if (_a != a) {
@@ -42,8 +42,9 @@ object App {
       }
     }
     if (a is LibStackContext) {
-      _a?.registerActivityLifecycleCallbacks(a.getActivityStack())
+      _a?.registerActivityLifecycleCallbacks(a.activityStack)
     }
     CrashHandler.init()
+    CrashHandler.upLoadCrashListener = listener
   }
 }

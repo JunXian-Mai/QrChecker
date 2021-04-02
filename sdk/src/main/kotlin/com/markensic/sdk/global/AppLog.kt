@@ -19,15 +19,13 @@ object AppLog {
 
   var forceEnable = false
 
-  var forceDisEnable = false
-
   var outputLevel = LogLevel.ASSERT
 
   var saveToFile = true
 
   private fun isEnable(): Boolean {
     Utils.checkLogFileVailTime()
-    return !forceDisEnable && forceEnable || App.isDebug
+    return forceEnable || App.isDebug
   }
 
   private fun printlnLog(
@@ -211,7 +209,7 @@ object AppLog {
       if (checkValid.compareAndSet(false, true)) {
         FileUtils.iterateFileInDir(logPath) { file ->
           if (file.isFile && file.name.endsWith(".log")) {
-            val logDateTime = file.name.substring(0, file.name.lastIndexOf(".log")).let { dateStr ->
+            file.name.substring(0, file.name.lastIndexOf(".log")).let { dateStr ->
               LOG_DATE_FORMAT.parse(
                 dateStr,
                 ParsePosition(0)

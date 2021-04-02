@@ -35,59 +35,63 @@ object CrashHandler : Thread.UncaughtExceptionHandler {
     }
   }
 
-  fun collectDeviceInfo(): String {
+  private fun collectDeviceInfo(): String {
     return StringBuilder().also { builder ->
       App.sApplication.packageManager?.also { pm ->
-        val packInfo = pm.getPackageInfo(App.sApplication.packageName, PackageManager.GET_ACTIVITIES)
-        val code: Int by lazy {
-          if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-            packInfo.longVersionCode.toInt()
-          } else {
-            packInfo.versionCode
-          }
-        }
-
-        builder.append(
-          """
-          Package Information:
-          SDK: ${Build.VERSION.SDK_INT}
-          VersionName: ${packInfo.versionName}
-          VersionCode: $code ${"\n\n"}
-        """.trimIndent()
-        )
-
-        builder.append(
-          "Hardware Information:\n"
-        )
-        builder.append(
-          """
-            DISPLAY: ${
-            Display.physicsDm.toString().let {
-              it.substring(it.indexOf("{") + 1, it.lastIndexOf("}"))
+        try {
+          val packInfo = pm.getPackageInfo(App.sApplication.packageName, PackageManager.GET_ACTIVITIES)
+          val code: Int by lazy {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+              packInfo.longVersionCode.toInt()
+            } else {
+              packInfo.versionCode
             }
-          }${"\n"}
-          """.trimIndent()
-        )
-
-        Build::class.java.declaredFields.forEach {
-          it.isAccessible = true
-          var value = ""
-          if (it.type == Array<String>::class.java) {
-            (it.get(null) as Array<*>).forEach { item ->
-              value += "$item ,"
-            }
-            if (value.isNotBlank()) {
-              value = value.substring(0, value.length - 2)
-            }
-          } else {
-            value = it.get(null).toString()
           }
 
           builder.append(
             """
-              ${it.name}: $value${"\n"}
+              Package Information:
+              SDK: ${Build.VERSION.SDK_INT}
+              VersionName: ${packInfo.versionName}
+              VersionCode: $code${"\n\n"}
             """.trimIndent()
           )
+
+          builder.append(
+            "Hardware Information:\n"
+          )
+          builder.append(
+            """
+              DISPLAY: ${
+                Display.physicsDm.toString().let {
+                  it.substring(it.indexOf("{") + 1, it.lastIndexOf("}"))
+                }
+              }${"\n"}
+            """.trimIndent()
+          )
+
+          Build::class.java.declaredFields.forEach {
+            it.isAccessible = true
+            var value = ""
+            if (it.type == Array<String>::class.java) {
+              (it.get(null) as Array<*>).forEach { item ->
+                value += "$item ,"
+              }
+              if (value.isNotBlank()) {
+                value = value.substring(0, value.length - 2)
+              }
+            } else {
+              value = it.get(null)?.toString() ?: ""
+            }
+
+            builder.append(
+              """
+                ${it.name}: $value${"\n"}
+              """.trimIndent()
+            )
+          }
+        } catch (e: Exception) {
+          // eat exception
         }
       }
     }.toString()

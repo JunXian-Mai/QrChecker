@@ -1,4 +1,4 @@
-package com.markensic.qrchecker.ui.base
+package com.markensic.sdk.ui
 
 import android.content.res.Resources
 import android.util.DisplayMetrics

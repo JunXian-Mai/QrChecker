@@ -6,9 +6,9 @@ import com.markensic.sdk.global.ActivityStack
 import com.markensic.sdk.global.App
 import com.markensic.sdk.global.LibStackContext
 
-class QrCheckerApp : LibStackContext, Application() {
+class QrCheckerApp : Application(), LibStackContext {
 
-  private val stackContext = ActivityStack()
+  override val activityStack: ActivityStack = ActivityStack(true)
 
   override fun attachBaseContext(base: Context?) {
     super.attachBaseContext(base)
@@ -17,9 +17,5 @@ class QrCheckerApp : LibStackContext, Application() {
 
   override fun onCreate() {
     super.onCreate()
-  }
-
-  override fun getActivityStack(): ActivityStack {
-    return stackContext
   }
 }
