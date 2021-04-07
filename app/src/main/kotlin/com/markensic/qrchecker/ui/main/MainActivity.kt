@@ -9,17 +9,9 @@ import com.markensic.qrchecker.databinding.ActivityMainBinding
 import com.markensic.qrchecker.ui.base.BaseActivity
 import com.markensic.qrchecker.ui.custom.MainLayout
 import com.markensic.qrchecker.viewmodel.MainViewModel
-import com.markensic.sdk.global.App
-import com.markensic.sdk.global.AppLog
-import com.markensic.sdk.global.sdkLogd
-import com.markensic.sdk.global.sdkLoge
-import com.markensic.sdk.utils.FileUtils
-import okio.*
-import java.io.BufferedInputStream
-import java.io.File
-import java.nio.charset.Charset
+import okio.buffer
+import okio.source
 import kotlin.concurrent.thread
-import kotlin.io.use
 
 class MainActivity : BaseActivity() {
 

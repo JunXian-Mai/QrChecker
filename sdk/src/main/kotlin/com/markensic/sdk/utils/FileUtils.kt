@@ -52,7 +52,7 @@ object FileUtils {
   @Throws(IllegalAccessError::class)
   fun makeDirectory(path: String): Boolean {
     return if ('/' == path.last()) {
-       File(path).mkdirs()
+      File(path).mkdirs()
     } else {
       throw IllegalAccessError("$path is not a directory")
     }

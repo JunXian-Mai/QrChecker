@@ -3,6 +3,7 @@ package com.markensic.sdk.global
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Process
+import android.util.Log
 import com.markensic.sdk.ui.Display
 import com.markensic.sdk.utils.FileUtils
 import java.io.File
@@ -63,10 +64,10 @@ object CrashHandler : Thread.UncaughtExceptionHandler {
           builder.append(
             """
               DISPLAY: ${
-                Display.physicsDm.toString().let {
-                  it.substring(it.indexOf("{") + 1, it.lastIndexOf("}"))
-                }
-              }${"\n"}
+              Display.physicsDm.toString().let {
+                it.substring(it.indexOf("{") + 1, it.lastIndexOf("}"))
+              }
+            }${"\n"}
             """.trimIndent()
           )
 
@@ -99,10 +100,12 @@ object CrashHandler : Thread.UncaughtExceptionHandler {
 
   private fun handleException(t: Thread, tr: Throwable): Boolean {
     return tr.let { ex ->
+      Log.e("CrashHandler", "catch crash: ${tr::class.java.simpleName}")
       val fileName =
         "Crash_${System.currentTimeMillis()}_${tr::class.java.simpleName}.log"
 
       FileUtils.createFile(path + fileName)?.also { file ->
+        Log.e("CrashHandler", "The detailed information see ${file.absolutePath}")
         file.printWriter().use { writer ->
           writer.println(
             """

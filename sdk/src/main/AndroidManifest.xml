@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest
-  package="com.markensic.sdk"
   xmlns:android="http://schemas.android.com/apk/res/android"
-  xmlns:tools="http://schemas.android.com/tools">
+  xmlns:tools="http://schemas.android.com/tools"
+  package="com.markensic.sdk">
 
   <application>
     <provider

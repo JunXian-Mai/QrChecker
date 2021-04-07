@@ -3,7 +3,7 @@ package com.markensic.sdk.delegate
 import android.content.Context
 import com.markensic.sdk.global.App
 
-class SpMap(spFileName: String, mode: Int = Context.MODE_PRIVATE): HashMap<String, Any?>() {
+class SpMap(spFileName: String, mode: Int = Context.MODE_PRIVATE) : HashMap<String, Any?>() {
 
   private val sp = App.sApplication.getSharedPreferences(spFileName, mode).also {
     it.all.forEach { entry ->
