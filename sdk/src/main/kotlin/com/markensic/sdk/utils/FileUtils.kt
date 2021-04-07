@@ -5,7 +5,6 @@ import android.net.Uri
 import android.os.Build
 import android.os.FileUtils
 import android.provider.OpenableColumns
-import android.util.Log
 import com.markensic.sdk.global.App
 import com.markensic.sdk.global.sdkLoge
 import okio.buffer
@@ -22,28 +21,30 @@ object FileUtils {
     return File(path).also {
       if ('/' == path.last()) {
         if (!it.exists() || !it.isDirectory) {
-          if (makeDirectory(path)) {
-            sdkLoge("create directory error maybe exists homonym file")
+          if (!makeDirectory(path)) {
+            sdkLoge("$path create directory error")
           }
         }
       } else {
         if (!it.exists() || it.isDirectory) {
           val dirPath = path.substring(0, path.lastIndexOf("/") + 1)
           makeDirectory(dirPath)
-          if (it.createNewFile()) {
-            sdkLoge("create file error maybe exists homonym directory")
+          if (!it.createNewFile()) {
+            sdkLoge("$path create file error")
           }
         }
       }
     }
   }
 
-  fun createNewFile(path: String): File? {
+  fun createFile(path: String): File? {
     val file = create(path)
     return if (file.exists() && !file.isDirectory) {
       file
     } else {
-      sdkLoge("createNewFile file error maybe exists homonym directory")
+      if (file.isDirectory) {
+        sdkLoge("$path createFile error, this is directory")
+      }
       null
     }
   }
@@ -78,19 +79,19 @@ object FileUtils {
   }
 
   fun appendToFile(path: String, text: String) {
-    createNewFile(path)?.also {
+    createFile(path)?.also {
       it.appendText(text)
     }
   }
 
   fun writeToFile(path: String, text: String) {
-    createNewFile(path)?.also {
+    createFile(path)?.also {
       it.writeText(text)
     }
   }
 
   fun writeToFile(path: String, array: ByteArray) {
-    createNewFile(path)?.also {
+    createFile(path)?.also {
       it.writeBytes(array)
     }
   }

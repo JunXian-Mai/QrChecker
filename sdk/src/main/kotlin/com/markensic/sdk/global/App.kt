@@ -33,7 +33,7 @@ object App {
       }
     }
 
-  fun initApplication(a: Application, listener: CrashHandler.UploadListener? = null) {
+  fun initApplication(a: Application, isCatchCrash: Boolean = true, listener: CrashHandler.UploadListener? = null) {
     if (_a != a) {
       synchronized(App::class) {
         if (_a != a) {
@@ -44,7 +44,9 @@ object App {
     if (a is LibStackContext) {
       _a?.registerActivityLifecycleCallbacks(a.activityStack)
     }
-    CrashHandler.init()
-    CrashHandler.upLoadCrashListener = listener
+    if (isCatchCrash) {
+      CrashHandler.init()
+      CrashHandler.upLoadCrashListener = listener
+    }
   }
 }

@@ -1,5 +1,6 @@
 package com.markensic.qrchecker.ui.base
 
+import android.graphics.Color
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
@@ -11,7 +12,8 @@ abstract class BaseActivity : AppCompatActivity() {
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
-    Ui.setSystemBar(window)
+    Ui.setSystemBar(window, false, false, lightModel = true)
+    Ui.setSystemBarColor(window, Color.RED, Color.RED)
     setContentView(bindingView())
     sdkLogd("statusBarSize: ${Ui.statusBarSize}")
     sdkLogd("navigationBarSize : ${Ui.navigationBarSize}")

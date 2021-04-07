@@ -102,7 +102,7 @@ object CrashHandler : Thread.UncaughtExceptionHandler {
       val fileName =
         "Crash_${System.currentTimeMillis()}_${tr::class.java.simpleName}.log"
 
-      FileUtils.createNewFile(path + fileName)?.also { file ->
+      FileUtils.createFile(path + fileName)?.also { file ->
         file.printWriter().use { writer ->
           writer.println(
             """

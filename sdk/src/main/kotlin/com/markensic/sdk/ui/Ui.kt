@@ -102,7 +102,8 @@ object Ui {
     immersionStatusBar: Boolean = true,
     immersionNavigationBar: Boolean = true,
     statusBarColor: Int = Color.TRANSPARENT,
-    navigationBarColor: Int = Color.TRANSPARENT
+    navigationBarColor: Int = Color.TRANSPARENT,
+    lightModel: Boolean = false
   ) {
     window.apply {
       decorView.apply {
@@ -112,6 +113,11 @@ object Ui {
         }
         if (immersionNavigationBar) {
           systemUiVisibility = systemUiVisibility or View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+        }
+        if (lightModel) {
+          systemUiVisibility = systemUiVisibility or
+              View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR or
+              View.SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR
         }
       }
 
@@ -128,6 +134,24 @@ object Ui {
         }
         this.navigationBarColor = navigationBarColor
       }
+    }
+  }
+
+  fun setSystemBarColor(
+    window: Window,
+    statusBarColor: Int = Color.TRANSPARENT,
+    navigationBarColor: Int = Color.TRANSPARENT
+  ) {
+    window.apply {
+      addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
+      clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS)
+      this.statusBarColor = statusBarColor
+      clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION)
+      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+        //去除Android Q 中导航栏的半透明罩
+        isNavigationBarContrastEnforced = false
+      }
+      this.navigationBarColor = navigationBarColor
     }
   }
 }
