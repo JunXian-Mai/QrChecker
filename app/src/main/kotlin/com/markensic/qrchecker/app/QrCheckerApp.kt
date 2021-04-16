@@ -14,8 +14,4 @@ class QrCheckerApp : Application(), LibStackContext {
     super.attachBaseContext(base)
     App.initApplication(this)
   }
-
-  override fun onCreate() {
-    super.onCreate()
-  }
 }
