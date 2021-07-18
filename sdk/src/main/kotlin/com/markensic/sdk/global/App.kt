@@ -18,7 +18,7 @@ object App {
           }
         }
       }
-      return _a ?: throw IllegalArgumentException("Application Not Found")
+      return _a ?: throw IllegalArgumentException("Application not be create")
     }
 
   val isDebug = _a?.applicationInfo?.flags?.and(ApplicationInfo.FLAG_DEBUGGABLE) != 0
@@ -27,9 +27,9 @@ object App {
     get() {
       return if (_a is LibStackContext) {
         (_a as LibStackContext).activityStack.stack.peek().get()
-          ?: throw RuntimeException("Activity Not Create Or Application Not registerActivityLifecycleCallbacks")
+          ?: throw RuntimeException("Activity not create or application not registerActivityLifecycleCallbacks")
       } else {
-        throw IllegalArgumentException("Activity Not Found, Application Should Implement LibStackContext")
+        throw IllegalArgumentException("Activity not found, application should implement LibStackContext")
       }
     }
 
