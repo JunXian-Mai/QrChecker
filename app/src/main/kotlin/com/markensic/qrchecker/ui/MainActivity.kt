@@ -1,9 +1,12 @@
-package com.markensic.qrchecker.ui.main
+package com.markensic.qrchecker.ui
 
+import android.os.Bundle
 import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
+import androidx.navigation.NavController
+import androidx.navigation.Navigation
 import com.markensic.qrchecker.BR
 import com.markensic.qrchecker.R
 import com.markensic.qrchecker.databinding.ActivityMainBinding
@@ -24,11 +27,12 @@ class MainActivity : BaseDataBindingActivity() {
     getActivityScopeViewModel(MainViewModel::class)
   }
 
-  override fun onDataBindingCreate(databinding: ViewDataBinding) {
-    (databinding.root as ViewGroup).addView(MainLayout(this))
-  }
-
-
   override fun getDataBindingImpl(): DataBindingImpl =
     DataBindingImpl(R.layout.activity_main, StateViewModelImpl(BR.vm, activityViewModel))
+
+  override fun onCreate(savedInstanceState: Bundle?) {
+    super.onCreate(savedInstanceState)
+
+    val navController = Navigation.findNavController(this, R.id.main_fragment_host)
+  }
 }

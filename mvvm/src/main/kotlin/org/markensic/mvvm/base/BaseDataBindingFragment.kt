@@ -20,7 +20,7 @@ import kotlin.reflect.KClass
 abstract class BaseDataBindingFragment : Fragment() {
 
     private var databinding: ViewDataBinding? = null
-    private var hostActivity: AppCompatActivity? = null
+    protected var hostActivity: AppCompatActivity? = null
 
     private val androidViewModelProvider: ViewModelProvider by lazy {
         val app = hostActivity?.application
