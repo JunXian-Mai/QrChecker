@@ -12,6 +12,7 @@ import com.markensic.qrchecker.viewmodel.AppSharedViewModel
 import com.markensic.qrchecker.viewmodel.MainViewModel
 import org.markensic.mvvm.base.BaseDataBindingActivity
 import org.markensic.mvvm.databinding.DataBindingImpl
+import org.markensic.mvvm.databinding.StateViewModelImpl
 
 class MainActivity : BaseDataBindingActivity() {
 
@@ -29,5 +30,5 @@ class MainActivity : BaseDataBindingActivity() {
 
 
   override fun getDataBindingImpl(): DataBindingImpl =
-    DataBindingImpl(R.layout.activity_main, BR.vm, activityViewModel)
+    DataBindingImpl(R.layout.activity_main, StateViewModelImpl(BR.vm, activityViewModel))
 }

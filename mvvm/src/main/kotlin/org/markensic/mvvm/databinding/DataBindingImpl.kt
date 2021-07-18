@@ -5,7 +5,11 @@ import androidx.lifecycle.ViewModel
 
 data class DataBindingImpl(
     val layoutId: Int,
-    val stateVariableId: Int,
-    val stateViewModel: ViewModel,
+    val stateViewModelImpl: StateViewModelImpl? = null,
     val variableParams: SparseArray<Any> = SparseArray()
+)
+
+data class StateViewModelImpl(
+    val stateVariableId: Int,
+    val stateViewModel: ViewModel
 )

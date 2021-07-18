@@ -69,7 +69,9 @@ abstract class BaseDataBindingActivity : AppCompatActivity() {
 
         val binding: ViewDataBinding = DataBindingUtil.setContentView(this, dataBindingImpl.layoutId)
         binding.lifecycleOwner = this
-        binding.setVariable(dataBindingImpl.stateVariableId, dataBindingImpl.stateViewModel)
+        dataBindingImpl.stateViewModelImpl?.let {
+            binding.setVariable(it.stateVariableId, it.stateViewModel)
+        }
         dataBindingImpl.variableParams.forEach { key, value ->
             binding.setVariable(key, value)
         }

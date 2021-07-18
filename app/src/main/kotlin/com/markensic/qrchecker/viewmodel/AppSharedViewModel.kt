@@ -8,7 +8,5 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 
 class AppSharedViewModel(app: Application): AndroidViewModel(app) {
-    val packageName = app.packageName
 
-    val versionCode = app.packageManager.getPackageInfo(packageName, 0).versionName
 }
