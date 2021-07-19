@@ -13,6 +13,7 @@ import com.markensic.qrchecker.databinding.ActivityMainBinding
 import com.markensic.qrchecker.ui.custom.MainLayout
 import com.markensic.qrchecker.viewmodel.AppSharedViewModel
 import com.markensic.qrchecker.viewmodel.MainViewModel
+import com.markensic.sdk.global.sdkLogd
 import org.markensic.mvvm.base.BaseDataBindingActivity
 import org.markensic.mvvm.databinding.DataBindingImpl
 import org.markensic.mvvm.databinding.StateViewModelImpl
@@ -33,6 +34,12 @@ class MainActivity : BaseDataBindingActivity() {
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
 
-    val navController = Navigation.findNavController(this, R.id.main_fragment_host)
+    sharedViewModel.name.observe(this) {
+      sdkLogd("MainActivity -> $it")
+    }
+
+    Navigation.findNavController(this, R.id.main_fragment_host)
+
+
   }
 }

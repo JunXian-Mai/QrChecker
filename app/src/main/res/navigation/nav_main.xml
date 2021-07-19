@@ -12,6 +12,24 @@
     android:label="fragment_main"
     tools:layout="@layout/fragment_main">
 
+    <action
+      android:id="@+id/action_mainFragment_to_secondFragment"
+      app:destination="@id/secondFragment" />
   </fragment>
+
+  <fragment
+    android:id="@+id/secondFragment"
+    android:name="com.markensic.qrchecker.ui.page.SecondFragment"
+    android:label="SecondFragment">
+
+    <action
+      android:id="@+id/action_secondFragment_to_thirdFragment"
+      app:destination="@id/thirdFragment" />
+  </fragment>
+
+  <fragment
+    android:id="@+id/thirdFragment"
+    android:name="com.markensic.qrchecker.ui.page.ThirdFragment"
+    android:label="ThirdFragment" />
 
 </navigation>

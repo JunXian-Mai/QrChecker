@@ -6,22 +6,22 @@ import androidx.lifecycle.Observer
 import com.markensic.sdk.global.sdkLogd
 import java.util.concurrent.ConcurrentHashMap
 
-class ProtectedUnPeekLiveData<T> : LiveData<T>() {
-
-    private val observerMap = ConcurrentHashMap<Observer<in T>, ProtectedUnPeekLiveData<T>.ObserverProxy>()
+open class BackingLiveData<T> : LiveData<T>() {
+    private val tag = "v6.1.0-beta1"
+    private val observerMap = ConcurrentHashMap<Observer<in T>, ObserverProxy>()
     protected var nullable = false
 
     override fun observe(owner: LifecycleOwner, observer: Observer<in T>) {
         val ob = getObserverProxy(observer)
         ob?.let {
-            super.observe(owner, observer)
+            super.observe(owner, it)
         }
     }
 
     override fun observeForever(observer: Observer<in T>) {
         val ob = getObserverProxy(observer)
         ob?.let {
-            super.observeForever(observer)
+            super.observeForever(it)
         }
     }
 
@@ -33,22 +33,19 @@ class ProtectedUnPeekLiveData<T> : LiveData<T>() {
         super.observeForever(observer)
     }
 
-    override fun setValue(value: T) {
+    protected override fun setValue(value: T?) {
         if (value != null || nullable) {
-            var entry: Map.Entry<*, *>
-            val iterator = observerMap.entries.iterator()
-            while (iterator.hasNext()) {
-                entry = iterator.next()
-                entry.value.state = true
+            for ((_, proxy) in observerMap.entries) {
+                proxy.allowPush = true
             }
             super.setValue(value)
         }
     }
 
     override fun removeObserver(observer: Observer<in T>) {
-        var proxy: Observer<in T>?
-        var target: Observer<in T>?
-        if (observer is ProtectedUnPeekLiveData.ObserverProxy) {
+        val proxy: Observer<in T>?
+        val target: Observer<in T>?
+        if (observer is BackingLiveData.ObserverProxy) {
             proxy = observer
             target = observer.target
         } else {
@@ -62,13 +59,13 @@ class ProtectedUnPeekLiveData<T> : LiveData<T>() {
 
         if (proxy != null && target != null) {
             observerMap.remove(target)
-            super.removeObserver(observer)
+            super.removeObserver(proxy)
         }
     }
 
     private fun getObserverProxy(observer: Observer<in T>): Observer<in T>? {
         return if (observerMap.containsKey(observer)) {
-            sdkLogd("observe repeatedly, observer has been attached to owner")
+            sdkLogd("BackingLiveData $tag -> observe repeatedly, observer has been attached to owner")
             null
         } else {
             ObserverProxy(observer).also {
@@ -77,15 +74,20 @@ class ProtectedUnPeekLiveData<T> : LiveData<T>() {
         }
     }
 
+    open fun clear() {
+        super.setValue(null)
+    }
+
     private inner class ObserverProxy(
         val target: Observer<in T>,
-        var state: Boolean = false
+        var allowPush: Boolean = false
     ) : Observer<T> {
 
         override fun onChanged(t: T) {
             val proxy = observerMap[target]
-            if (proxy?.state == true) {
-                proxy.state = false
+
+            if (proxy?.allowPush == true) {
+                proxy.allowPush = false
                 if (t != null || nullable) {
                     target.onChanged(t)
                 }

@@ -8,19 +8,19 @@ import androidx.navigation.fragment.NavHostFragment
 import com.markensic.qrchecker.R
 import com.markensic.qrchecker.ui.custom.MainLayout
 import com.markensic.qrchecker.viewmodel.AppSharedViewModel
-import com.markensic.qrchecker.viewmodel.MainFragmentViewModel
+import com.markensic.qrchecker.viewmodel.SecondFragmentViewModel
 import com.markensic.sdk.global.sdkLogd
 import org.markensic.mvvm.base.BaseDataBindingFragment
 import org.markensic.mvvm.databinding.DataBindingImpl
 
-class MainFragment: BaseDataBindingFragment() {
+class SecondFragment: BaseDataBindingFragment() {
 
     private val sharedViewModel by lazy {
         getAndroidScopeViewModel(AppSharedViewModel::class)
     }
 
-    private val mainFragmentViewModel by lazy {
-        getFragmentScopeViewModel(MainFragmentViewModel::class)
+    private val secondFragment by lazy {
+        getFragmentScopeViewModel(SecondFragmentViewModel::class)
     }
 
     override fun getDataBindingImpl(): DataBindingImpl = DataBindingImpl(R.layout.fragment_main)
@@ -30,14 +30,14 @@ class MainFragment: BaseDataBindingFragment() {
             MainLayout(hostActivity!!).apply {
                 tag = "MainLayout"
 
-                showTv.text = "MainFragment"
+                showTv.text = "SecondFragment"
 
                 nextEvent.setOnClickListener {
-                    NavHostFragment.findNavController(this@MainFragment).navigate(R.id.action_mainFragment_to_secondFragment)
+                    NavHostFragment.findNavController(this@SecondFragment).navigate(R.id.action_secondFragment_to_thirdFragment)
                 }
 
                 event.setOnClickListener {
-                    sharedViewModel.changeName("Main")
+                    sharedViewModel.changeName("Second")
                 }
 
                 eventTv.text = sharedViewModel.name.value
@@ -49,7 +49,7 @@ class MainFragment: BaseDataBindingFragment() {
         super.onViewCreated(view, savedInstanceState)
 
         sharedViewModel.name.observe(this) {
-            sdkLogd("MainFragment -> $it")
+            sdkLogd("SecondFragment -> $it")
             (getDataBinding().root as ViewGroup).findViewWithTag<MainLayout>("MainLayout").apply {
                 eventTv.text = it
             }
