@@ -17,11 +17,11 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelStoreOwner
-import com.markensic.sdk.global.App
-import com.markensic.sdk.ui.Ui
-import com.markensic.sdk.ui.dp
-import com.markensic.sdk.ui.sp
-import com.markensic.sdk.utils.PackageUtils
+import com.markensic.core.framework.ui.Ui
+import com.markensic.core.framework.ui.dp
+import com.markensic.core.framework.ui.sp
+import com.markensic.core.global.App
+import com.markensic.core.utils.PackageUtils
 import org.markensic.mvvm.R
 import org.markensic.mvvm.databinding.DataBindingImpl
 import org.markensic.mvvm.databinding.DataBindingLayout

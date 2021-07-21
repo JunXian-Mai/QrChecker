@@ -9,7 +9,7 @@ import com.markensic.qrchecker.R
 import com.markensic.qrchecker.ui.base.BaseFragment
 import com.markensic.qrchecker.ui.custom.MainLayout
 import com.markensic.qrchecker.viewmodel.MainFragmentViewModel
-import com.markensic.sdk.global.log.CoreLog
+import com.markensic.core.global.log.CoreLog
 import org.markensic.mvvm.databinding.DataBindingImpl
 
 class MainFragment : BaseFragment() {
@@ -23,7 +23,7 @@ class MainFragment : BaseFragment() {
   }
 
   private fun navSecondPage() {
-    nav().navigate(R.id.action_mainFragment_to_secondFragment)
+    nav().navigate(R.id.action_mainFragment_to_loginFragment)
   }
 
   override fun bindView(context: Context): SparseArray<View>? {

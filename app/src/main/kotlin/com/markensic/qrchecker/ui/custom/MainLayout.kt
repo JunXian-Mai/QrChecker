@@ -7,10 +7,10 @@ import android.widget.ImageView
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.view.updateMargins
 import com.markensic.qrchecker.R
-import com.markensic.sdk.ui.Display
-import com.markensic.sdk.ui.Ui
-import com.markensic.sdk.ui.dp
-import com.markensic.sdk.ui.matchParent
+import com.markensic.core.framework.ui.Display
+import com.markensic.core.framework.ui.Ui
+import com.markensic.core.framework.ui.dp
+import com.markensic.core.framework.ui.matchParent
 import org.markensic.mvvm.databinding.DataBindingLayout
 
 class MainLayout @JvmOverloads constructor(

@@ -6,7 +6,7 @@ import com.markensic.qrchecker.BR
 import com.markensic.qrchecker.R
 import com.markensic.qrchecker.ui.base.BaseActivity
 import com.markensic.qrchecker.viewmodel.MainViewModel
-import com.markensic.sdk.global.log.CoreLog
+import com.markensic.core.global.log.CoreLog
 import org.markensic.mvvm.databinding.DataBindingImpl
 import org.markensic.mvvm.databinding.StateViewModelImpl
 
@@ -17,7 +17,9 @@ class MainActivity : BaseActivity() {
   }
 
   override fun getDataBindingImpl(): DataBindingImpl =
-    DataBindingImpl(R.layout.activity_main, StateViewModelImpl(BR.vm, activityViewModel))
+    DataBindingImpl(R.layout.activity_main, StateViewModelImpl(BR.vm, activityViewModel)).apply {
+      addVariableParam(BR.vm, activityViewModel)
+    }
 
   fun nav() = Navigation.findNavController(this, R.id.main_fragment_host)
 
@@ -27,7 +29,5 @@ class MainActivity : BaseActivity() {
     sharedViewModel.name.observe(this) {
       CoreLog.d("MainActivity -> $it")
     }
-
-//    nav()
   }
 }

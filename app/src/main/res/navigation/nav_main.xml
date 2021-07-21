@@ -11,25 +11,21 @@
     android:name="com.markensic.qrchecker.ui.page.MainFragment"
     android:label="fragment_main"
     tools:layout="@layout/fragment_main">
-
     <action
-      android:id="@+id/action_mainFragment_to_secondFragment"
-      app:destination="@id/secondFragment" />
+      android:id="@+id/action_mainFragment_to_loginFragment"
+      app:destination="@id/loginFragment" />
   </fragment>
-
   <fragment
-    android:id="@+id/secondFragment"
+    android:id="@+id/loginFragment"
     android:name="com.markensic.qrchecker.ui.page.LoginFragment"
-    android:label="SecondFragment">
-
+    android:label="LoginFragment">
     <action
-      android:id="@+id/action_secondFragment_to_thirdFragment"
-      app:destination="@id/thirdFragment" />
+      android:id="@+id/action_loginFragment_to_userFragment"
+      app:destination="@id/userFragment" />
   </fragment>
-
   <fragment
-    android:id="@+id/thirdFragment"
-    android:name="com.markensic.qrchecker.ui.page.ThirdFragment"
-    android:label="ThirdFragment" />
+    android:id="@+id/userFragment"
+    android:name="com.markensic.qrchecker.ui.page.UserFragment"
+    android:label="UserFragment" />
 
 </navigation>

@@ -3,7 +3,7 @@ package org.markensic.mvvm.livedata
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
-import com.markensic.sdk.global.log.CoreLog
+import com.markensic.core.global.log.CoreLog
 import java.util.concurrent.ConcurrentHashMap
 
 open class BackingLiveData<T> : LiveData<T>() {

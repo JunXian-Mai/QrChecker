@@ -1,9 +1,9 @@
 package com.markensic.qrchecker.app
 
 import android.content.Context
-import com.markensic.sdk.global.ActivityStack
-import com.markensic.sdk.global.App
-import com.markensic.sdk.global.LibStackContext
+import com.markensic.core.global.App
+import com.markensic.core.global.stack.ActivityStack
+import com.markensic.core.global.stack.LibStackContext
 import org.markensic.mvvm.base.BaseApplication
 
 class QrCheckerApp : BaseApplication(), LibStackContext {

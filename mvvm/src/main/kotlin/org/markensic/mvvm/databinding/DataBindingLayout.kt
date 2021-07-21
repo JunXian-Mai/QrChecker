@@ -4,8 +4,8 @@ import android.content.Context
 import android.util.AttributeSet
 import android.util.SparseArray
 import androidx.core.util.putAll
-import com.markensic.sdk.global.log.CoreLog
-import com.markensic.sdk.ui.CustomLayout
+import com.markensic.core.framework.ui.CustomLayout
+import com.markensic.core.global.log.CoreLog
 
 abstract class DataBindingLayout @JvmOverloads constructor(
   context: Context,

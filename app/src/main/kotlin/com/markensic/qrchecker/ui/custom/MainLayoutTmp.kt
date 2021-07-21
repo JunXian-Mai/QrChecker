@@ -9,7 +9,7 @@ import android.widget.TextView
 import androidx.core.view.updateMargins
 import androidx.core.view.updatePadding
 import com.markensic.qrchecker.R
-import com.markensic.sdk.ui.*
+import com.markensic.core.framework.ui.*
 
 class MainLayoutTmp @JvmOverloads constructor(
   context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0

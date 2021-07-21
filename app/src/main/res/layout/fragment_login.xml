@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  xmlns:mvvm="http://schemas.android.com/tools">
+
+  <data>
+
+    <variable
+      name="vm"
+      type="com.markensic.qrchecker.viewmodel.state.LoginViewModel" />
+
+  </data>
+
+  <androidx.constraintlayout.widget.ConstraintLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/background"
+    android:gravity="center_vertical"
+    android:orientation="vertical">
+
+    <ImageView
+      android:id="@+id/iv_account"
+      android:layout_width="35dp"
+      android:layout_height="35dp"
+      android:layout_marginStart="45dp"
+      android:scaleType="fitCenter"
+      android:src="@drawable/ic_account"
+      app:layout_constraintBottom_toTopOf="@id/iv_password"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toTopOf="parent"
+      app:layout_constraintVertical_chainStyle="packed" />
+
+    <EditText
+      android:id="@+id/ed_account"
+      android:layout_width="0dp"
+      android:layout_height="wrap_content"
+      android:layout_marginStart="10dp"
+      android:layout_marginEnd="45dp"
+      android:maxLines="1"
+      android:singleLine="true"
+      android:text="@={vm.account}"
+      android:textColor="@color/white"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintStart_toEndOf="@id/iv_account"
+      app:layout_constraintTop_toTopOf="@id/iv_account" />
+
+    <ImageView
+      android:id="@+id/iv_password"
+      android:layout_width="35dp"
+      android:layout_height="35dp"
+      android:layout_marginStart="45dp"
+      android:layout_marginTop="30dp"
+      android:scaleType="fitCenter"
+      android:src="@drawable/ic_password"
+      app:layout_constraintBottom_toBottomOf="parent"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toBottomOf="@id/iv_account" />
+
+    <EditText
+      android:id="@+id/ed_password"
+      android:layout_width="0dp"
+      android:layout_height="wrap_content"
+      android:layout_marginStart="10dp"
+      android:layout_marginEnd="45dp"
+      android:maxLines="1"
+      android:singleLine="true"
+      android:text="@={vm.password}"
+      android:textColor="@color/white"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintStart_toEndOf="@id/iv_password"
+      app:layout_constraintTop_toTopOf="@id/iv_password" />
+
+    <Button
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_marginTop="50dp"
+      android:text="@{vm.loginBtnText}"
+      android:textAllCaps="false"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toBottomOf="@id/ed_password"
+      mvvm:onDebouncingClick="@{() -> vm.doLoginIn()}" />
+
+  </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>
