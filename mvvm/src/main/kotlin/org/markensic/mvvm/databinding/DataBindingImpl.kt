@@ -2,7 +2,7 @@ package org.markensic.mvvm.databinding
 
 import android.util.SparseArray
 import androidx.core.util.set
-import androidx.lifecycle.ViewModel
+import org.markensic.mvvm.viewmodel.StateViewModelImpl
 
 data class DataBindingImpl(
   val layoutId: Int,
@@ -14,8 +14,3 @@ data class DataBindingImpl(
     variableParams[variableId] = any
   }
 }
-
-data class StateViewModelImpl(
-  val stateVariableId: Int,
-  val stateViewModel: ViewModel
-)

@@ -13,8 +13,8 @@ class OnDebouncingClickProxy(
     val DEFAULT_DURATION: Long = 750
 
     @Volatile
-    var sClickable = true
-    val sAllowClick = {
+    private var sClickable = true
+    private val sAllowClick = {
       sClickable = true
     }
   }
@@ -53,5 +53,23 @@ class OnDebouncingClickProxy(
         CoreLog.i("This onClick be intercepted by OnDebouncingClickProxy")
       }
     }
+  }
+}
+
+fun View.applyOnDebouncingClickProxy(
+  listener: (View) -> Unit,
+  isGlobal: Boolean = false,
+  duration: Long = OnDebouncingClickProxy.DEFAULT_DURATION
+) {
+  setOnClickListener(OnDebouncingClickProxy(listener, isGlobal, duration))
+}
+
+fun Array<View>.applyOnDebouncingClickProxy(
+  listener: (View) -> Unit,
+  isGlobal: Boolean = false,
+  duration: Long = OnDebouncingClickProxy.DEFAULT_DURATION
+) {
+  forEach {
+    it.applyOnDebouncingClickProxy(listener, isGlobal, duration)
   }
 }
