@@ -6,32 +6,39 @@ import android.view.ViewGroup
 import androidx.databinding.ViewDataBinding
 import com.markensic.qrchecker.R
 import com.markensic.qrchecker.ui.base.BaseFragment
-import com.markensic.qrchecker.ui.custom.MainLayout
-import com.markensic.qrchecker.viewmodel.MainFragmentViewModel
+import com.markensic.qrchecker.ui.custom.MainLayoutTmp
+import com.markensic.qrchecker.viewmodel.state.LoginViewModel
 import com.markensic.sdk.global.log.CoreLog
 import org.markensic.mvvm.databinding.DataBindingImpl
 
-class MainFragment : BaseFragment() {
+class LoginFragment : BaseFragment() {
 
-  private val mainFragmentViewModel by lazy {
-    getFragmentScopeViewModel(MainFragmentViewModel::class)
+  private val loginState by lazy {
+    getFragmentScopeViewModel(LoginViewModel::class)
   }
 
   override fun getDataBindingImpl(): DataBindingImpl = DataBindingImpl(R.layout.fragment_main)
 
-  private fun navSecondPage() {
-    nav().navigate(R.id.action_mainFragment_to_secondFragment)
+  private fun navThirdPage() {
+    nav().navigate(R.id.action_secondFragment_to_thirdFragment)
   }
 
   override fun onDataBindingCreate(databinding: ViewDataBinding) {
     (databinding.root as ViewGroup).addView(
-      MainLayout(hostActivity!!).apply {
+      MainLayoutTmp(hostActivity!!).apply {
         tag = "MainLayout"
 
+        showTv.text = "SecondFragment"
 
-        loginIv.setOnClickListener {
-          navSecondPage()
+        nextEvent.setOnClickListener {
+          navThirdPage()
         }
+
+        event.setOnClickListener {
+          sharedViewModel.changeName("Second")
+        }
+
+        eventTv.text = sharedViewModel.name.value
       }
     )
   }
@@ -40,8 +47,10 @@ class MainFragment : BaseFragment() {
     super.onViewCreated(view, savedInstanceState)
 
     sharedViewModel.name.observe(this) {
-      CoreLog.d("MainFragment -> $it")
-
+      CoreLog.d("SecondFragment -> $it")
+      (getDataBinding().root as ViewGroup).findViewWithTag<MainLayoutTmp>("MainLayout").apply {
+        eventTv.text = it
+      }
     }
   }
 }

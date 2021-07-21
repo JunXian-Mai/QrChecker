@@ -5,13 +5,15 @@ import android.content.res.Resources
 import android.graphics.Color
 import android.graphics.Rect
 import android.os.Build
-import android.view.View
-import android.view.ViewTreeObserver
-import android.view.Window
-import android.view.WindowManager
+import android.view.*
 import com.markensic.sdk.global.App
 
 object Ui {
+
+  val displayWidth = Display.realWidth
+
+  val displayHeight = Display.realHeight
+
   private const val NOT_MEASURED = -1
 
   @Volatile
@@ -116,8 +118,8 @@ object Ui {
         }
         if (lightModel) {
           systemUiVisibility = systemUiVisibility or
-              View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR or
-              View.SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR
+            View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR or
+            View.SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR
         }
       }
 

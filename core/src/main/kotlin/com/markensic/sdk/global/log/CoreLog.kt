@@ -1,9 +1,10 @@
-package com.markensic.sdk.global
+package com.markensic.sdk.global.log
 
 import android.os.Build
 import android.os.DeadSystemException
-import android.util.Log
 import com.markensic.sdk.delegate.SpMap
+import com.markensic.sdk.global.App
+import com.markensic.sdk.global.log.Timber.Forest.plant
 import com.markensic.sdk.utils.FileUtils
 import com.markensic.sdk.utils.ThreadUtils
 import java.io.ByteArrayOutputStream
@@ -15,13 +16,25 @@ import java.text.SimpleDateFormat
 import java.util.*
 import java.util.concurrent.atomic.AtomicBoolean
 
-object AppLog {
+object CoreLog {
+
+  private val logTree = CoreLogTree()
 
   var forceEnable = false
+    set(value) {
+      field = value
+      if (value && !App.isDebug) {
+        initLog()
+      }
+    }
 
-  var outputLevel = LogLevel.ASSERT
+  var maxLogLevel = LogLevel.ASSERT
 
   var saveToFile = true
+
+  fun initLog() {
+    plant(logTree)
+  }
 
   private fun isEnable(): Boolean {
     Utils.checkLogFileVailTime()
@@ -30,105 +43,121 @@ object AppLog {
 
   private fun printlnLog(
     level: LogLevel,
-    tag: String,
-    message: String,
+    tag: String?,
+    message: String?,
     tr: Throwable?,
-    outToLogcat: () -> Int
-  ): Int {
-    return isEnable().let {
-      val trMsg = StringBuilder()
-      tr?.forEarch { ex ->
-        when (ex) {
-          is UnknownHostException -> return@forEarch
-          else -> {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N && ex is DeadSystemException) {
-              trMsg.append("DeadSystemException: The system died; earlier logs will point to the root cause")
-              return@forEarch
-            }
+    outToLogcat: () -> Unit
+  ) {
+    isEnable().let {
+      val trMsg = handleThrowable(tr)
 
-            ByteArrayOutputStream().use { baos ->
-              PrintWriter(baos).use { write ->
-                ex.printStackTrace(write)
-              }
-              trMsg.append(baos.toString())
+      val finalTag = tag ?: logTree.tag ?: "Nil"
+
+      val finalMsg = message ?: ""
+
+      val logMsg = if (trMsg.isBlank()) {
+        "${level.simpleTag}/$finalTag: $finalMsg"
+      } else {
+        "${level.simpleTag}/$finalTag: $finalMsg\n$trMsg"
+      }
+
+      if (it) outputLog(level, logMsg, outToLogcat)
+    }
+  }
+
+  private fun handleThrowable(tr: Throwable?): String {
+    val trMsg = StringBuilder("")
+    tr?.forEarch { ex ->
+      when (ex) {
+        is UnknownHostException -> return@forEarch
+        else -> {
+          if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N && ex is DeadSystemException) {
+            trMsg.append("DeadSystemException: The system died; earlier logs will point to the root cause")
+            return@forEarch
+          }
+
+          ByteArrayOutputStream().use { baos ->
+            PrintWriter(baos).use { write ->
+              ex.printStackTrace(write)
             }
+            trMsg.append(baos.toString())
           }
         }
       }
+    }
+    return trMsg.toString()
+  }
 
-      val logMsg = trMsg.let { trStr ->
-        if (trStr.toString().isEmpty()) {
-          "${level.simpleTag}/$tag: $message"
-        } else {
-          "${level.simpleTag}/$tag: $message\n$trStr"
-        }
-      }
-
-      if (it) {
-        meetOutputLevel(level, logMsg, outToLogcat)
-      } else {
-        -1
-      }
+  private fun outputLog(level: LogLevel, message: String, outLogcat: () -> Unit) {
+    if (maxLogLevel.value >= level.value) {
+      if (saveToFile) Utils.writeToFile(message)
+      outLogcat.invoke()
     }
   }
 
-  private fun meetOutputLevel(level: LogLevel, message: String, outToLogcat: () -> Int): Int {
-    return outputLevel.let {
-      if (it.value >= level.value) {
-        saveToFile(message, outToLogcat)
-      } else {
-        -1
-      }
+  fun v(tag: String, message: String, tr: Throwable? = null) {
+    printlnLog(LogLevel.VERBOSE, tag, message, tr) {
+      Timber.tag(tag).v(tr, message)
     }
   }
 
-  private fun saveToFile(message: String, outToLogcat: () -> Int): Int {
-    return if (saveToFile) {
-      Utils.writeToFile(message)
-      outToLogcat()
-    } else {
-      outToLogcat()
+  fun v(message: String, tr: Throwable? = null) {
+    printlnLog(LogLevel.VERBOSE, null, message, tr) {
+      Timber.v(tr, message)
     }
   }
 
-
-  fun v(tag: String, message: String, tr: Throwable? = null): Int {
-    return printlnLog(LogLevel.VERBOSE, tag, message, tr) {
-      tr?.let {
-        Log.v(tag, message, tr)
-      } ?: Log.v(tag, message)
+  fun e(tag: String, message: String, tr: Throwable? = null) {
+    printlnLog(LogLevel.ERROR, tag, message, tr) {
+      Timber.tag(tag).e(tr, message)
     }
   }
 
-  fun e(tag: String, message: String, tr: Throwable? = null): Int {
-    return printlnLog(LogLevel.ERROR, tag, message, tr) {
-      tr?.let {
-        Log.e(tag, message, tr)
-      } ?: Log.e(tag, message)
+  fun e(message: String, tr: Throwable? = null) {
+    printlnLog(LogLevel.ERROR, null, message, tr) {
+      Timber.e(tr, message)
     }
   }
 
-  fun i(tag: String, message: String, tr: Throwable? = null): Int {
-    return printlnLog(LogLevel.INFO, tag, message, tr) {
-      tr?.let {
-        Log.i(tag, message, tr)
-      } ?: Log.i(tag, message)
+  fun e(tr: Throwable) {
+    printlnLog(LogLevel.ERROR, null, null, tr) {
+      Timber.e(tr)
     }
   }
 
-  fun d(tag: String, message: String, tr: Throwable? = null): Int {
-    return printlnLog(LogLevel.DEBUG, tag, message, tr) {
-      tr?.let {
-        Log.d(tag, message, tr)
-      } ?: Log.d(tag, message)
+  fun i(tag: String, message: String, tr: Throwable? = null) {
+    printlnLog(LogLevel.INFO, tag, message, tr) {
+      Timber.tag(tag).i(tr, message)
     }
   }
 
-  fun w(tag: String, message: String, tr: Throwable? = null): Int {
-    return printlnLog(LogLevel.WARN, tag, message, tr) {
-      tr?.let {
-        Log.w(tag, message, tr)
-      } ?: Log.w(tag, message)
+  fun i(message: String, tr: Throwable? = null) {
+    printlnLog(LogLevel.INFO, null, message, tr) {
+      Timber.i(tr, message)
+    }
+  }
+
+  fun d(tag: String, message: String, tr: Throwable? = null) {
+    printlnLog(LogLevel.DEBUG, tag, message, tr) {
+      Timber.tag(tag).d(tr, message)
+    }
+  }
+
+  fun d(message: String, tr: Throwable? = null) {
+    printlnLog(LogLevel.DEBUG, null, message, tr) {
+      Timber.d(tr, message)
+    }
+  }
+
+  fun w(tag: String, message: String, tr: Throwable? = null) {
+    printlnLog(LogLevel.WARN, tag, message, tr) {
+      Timber.tag(tag).w(tr, message)
+    }
+  }
+
+  fun w(message: String, tr: Throwable? = null) {
+    printlnLog(LogLevel.WARN, null, message, tr) {
+      Timber.w(tr, message)
     }
   }
 
@@ -136,7 +165,7 @@ object AppLog {
     Utils.saveDay = vailDay
   }
 
-  fun setLogFilePath(path: String) {
+  fun setLogPath(path: String) {
     Utils.logPath = path
   }
 
@@ -166,10 +195,12 @@ object AppLog {
     private val checkValid = AtomicBoolean(false)
 
     private val LOG_DATE_FORMAT = SimpleDateFormat("yyyy-MM-dd", Locale.CHINA)
+
     private val today: String
       get() {
         return LOG_DATE_FORMAT.format(Date())
       }
+
     private val logFileName get() = "$today.log"
 
     private val msgPrefix: String

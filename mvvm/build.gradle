@@ -50,7 +50,7 @@ repositories {
 
 dependencies {
   implementation fileTree(dir: "libs", include: ["*.jar"])
-  implementation project(":sdk")
+  implementation project(":core")
   implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
   implementation "org.jetbrains.kotlin:kotlin-reflect:$kotlinVersion"
   implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$kotlinXVersion"

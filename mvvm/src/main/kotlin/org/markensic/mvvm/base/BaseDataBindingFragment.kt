@@ -19,72 +19,71 @@ import kotlin.reflect.KClass
 
 abstract class BaseDataBindingFragment : Fragment() {
 
-    private var databinding: ViewDataBinding? = null
-    protected var hostActivity: AppCompatActivity? = null
+  protected abstract fun getDataBindingImpl(): DataBindingImpl
 
-    private val androidViewModelProvider: ViewModelProvider by lazy {
-        val app = hostActivity?.application
-            ?: throw IllegalStateException("Fragment be detached, can't create ViewModelProvider")
-        if (app !is ViewModelStoreOwner) {
-            throw IllegalStateException("Your application is not yet implements ViewModelStoreOwner.")
-        }
-        ViewModelProvider.AndroidViewModelFactory.getInstance(app).let {
-            ViewModelProvider(app as ViewModelStoreOwner, it)
-        }
+  protected open fun onDataBindingCreate(databinding: ViewDataBinding) {}
+
+  private var databinding: ViewDataBinding? = null
+  protected var hostActivity: AppCompatActivity? = null
+  private val androidViewModelProvider: ViewModelProvider by lazy {
+    val app = hostActivity?.application
+      ?: throw IllegalStateException("Fragment be detached, can't create ViewModelProvider")
+    if (app !is ViewModelStoreOwner) {
+      throw IllegalStateException("Your application is not yet implements ViewModelStoreOwner.")
     }
-    private val activityViewModelProvider: ViewModelProvider by lazy {
-        hostActivity?.let {
-            ViewModelProvider(it)
-        } ?: throw IllegalStateException("Fragment be detached, can't create ViewModelProvider")
+    ViewModelProvider.AndroidViewModelFactory.getInstance(app).let {
+      ViewModelProvider(app as ViewModelStoreOwner, it)
     }
-    private val fragmentViewModelProvider: ViewModelProvider by lazy {
-        ViewModelProvider(this)
+  }
+  private val activityViewModelProvider: ViewModelProvider by lazy {
+    hostActivity?.let {
+      ViewModelProvider(it)
+    } ?: throw IllegalStateException("Fragment be detached, can't create ViewModelProvider")
+  }
+  private val fragmentViewModelProvider: ViewModelProvider by lazy {
+    ViewModelProvider(this)
+  }
+
+  protected fun <VM : AndroidViewModel> getAndroidScopeViewModel(kClass: KClass<VM>) =
+    androidViewModelProvider.get(kClass.java)
+
+  protected fun <VM : ViewModel> getActivityScopeViewModel(kClass: KClass<VM>) =
+    activityViewModelProvider.get(kClass.java)
+
+  protected fun <VM : ViewModel> getFragmentScopeViewModel(kClass: KClass<VM>) =
+    fragmentViewModelProvider.get(kClass.java)
+
+  protected fun getDataBinding(): ViewDataBinding =
+    databinding ?: throw NullPointerException("DataBinding not yet initialize or be destroyed")
+
+  override fun onAttach(context: Context) {
+    super.onAttach(context)
+    hostActivity = context as AppCompatActivity
+  }
+
+  override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    val dataBindingImpl = getDataBindingImpl()
+
+    val binding: ViewDataBinding = DataBindingUtil.inflate(inflater, dataBindingImpl.layoutId, container, false)
+    binding.lifecycleOwner = this
+    dataBindingImpl.stateViewModelImpl?.let {
+      binding.setVariable(it.stateVariableId, it.stateViewModel)
     }
-
-    protected fun <VM : AndroidViewModel> getAndroidScopeViewModel(kClass: KClass<VM>) =
-        androidViewModelProvider.get(kClass.java)
-
-    protected fun <VM : ViewModel> getActivityScopeViewModel(kClass: KClass<VM>) =
-        activityViewModelProvider.get(kClass.java)
-
-    protected fun <VM : ViewModel> getFragmentScopeViewModel(kClass: KClass<VM>) =
-        fragmentViewModelProvider.get(kClass.java)
-
-    protected abstract fun getDataBindingImpl(): DataBindingImpl
-
-    protected open fun onDataBindingCreate(databinding: ViewDataBinding) {}
-
-    protected fun getDataBinding(): ViewDataBinding =
-        databinding ?: throw NullPointerException("DataBinding not yet initialize or be destroyed")
-
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-        hostActivity = context as AppCompatActivity
-    }
-
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val dataBindingImpl = getDataBindingImpl()
-
-        val binding: ViewDataBinding = DataBindingUtil.inflate(inflater, dataBindingImpl.layoutId, container, false)
-        binding.lifecycleOwner = this
-        dataBindingImpl.stateViewModelImpl?.let {
-            binding.setVariable(it.stateVariableId, it.stateViewModel)
-        }
-        dataBindingImpl.variableParams.forEach { key, value ->
-            binding.setVariable(key, value)
-        }
-
-        onDataBindingCreate(binding)
-
-        databinding = binding
-
-        return databinding?.root
+    dataBindingImpl.variableParams.forEach { key, value ->
+      binding.setVariable(key, value)
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-        databinding?.unbind()
-        databinding = null
-    }
+    onDataBindingCreate(binding)
+
+    databinding = binding
+
+    return databinding?.root
+  }
+
+  override fun onDestroyView() {
+    super.onDestroyView()
+    databinding?.unbind()
+    databinding = null
+  }
 
 }

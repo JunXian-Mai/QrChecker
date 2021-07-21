@@ -19,7 +19,7 @@
 
   <fragment
     android:id="@+id/secondFragment"
-    android:name="com.markensic.qrchecker.ui.page.SecondFragment"
+    android:name="com.markensic.qrchecker.ui.page.LoginFragment"
     android:label="SecondFragment">
 
     <action

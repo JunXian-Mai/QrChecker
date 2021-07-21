@@ -6,7 +6,7 @@ import android.os.Build
 import android.os.FileUtils
 import android.provider.OpenableColumns
 import com.markensic.sdk.global.App
-import com.markensic.sdk.global.sdkLoge
+import com.markensic.sdk.global.log.CoreLog
 import okio.buffer
 import okio.sink
 import java.io.File
@@ -22,7 +22,7 @@ object FileUtils {
       if ('/' == path.last()) {
         if (!it.exists() || !it.isDirectory) {
           if (!makeDirectory(path)) {
-            sdkLoge("$path create directory error")
+            CoreLog.e("$path create directory error")
           }
         }
       } else {
@@ -30,7 +30,7 @@ object FileUtils {
           val dirPath = path.substring(0, path.lastIndexOf("/") + 1)
           makeDirectory(dirPath)
           if (!it.createNewFile()) {
-            sdkLoge("$path create file error")
+            CoreLog.e("$path create file error")
           }
         }
       }
@@ -43,7 +43,7 @@ object FileUtils {
       file
     } else {
       if (file.isDirectory) {
-        sdkLoge("$path createFile error, this is directory")
+        CoreLog.e("$path createFile error, this is directory")
       }
       null
     }

@@ -3,6 +3,8 @@ package com.markensic.sdk.global
 import android.app.Activity
 import android.app.Application
 import android.content.pm.ApplicationInfo
+import com.markensic.sdk.global.log.CoreLog
+
 
 object App {
 
@@ -41,9 +43,15 @@ object App {
         }
       }
     }
+
+    if (isDebug) {
+      CoreLog.initLog()
+    }
+
     if (a is LibStackContext) {
       _a?.registerActivityLifecycleCallbacks(a.activityStack)
     }
+
     if (isCatchCrash) {
       CrashHandler.init()
       CrashHandler.upLoadCrashListener = listener

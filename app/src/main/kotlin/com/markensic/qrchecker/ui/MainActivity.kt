@@ -1,28 +1,16 @@
 package com.markensic.qrchecker.ui
 
 import android.os.Bundle
-import android.view.View
-import android.view.ViewGroup
-import androidx.databinding.DataBindingUtil
-import androidx.databinding.ViewDataBinding
-import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import com.markensic.qrchecker.BR
 import com.markensic.qrchecker.R
-import com.markensic.qrchecker.databinding.ActivityMainBinding
-import com.markensic.qrchecker.ui.custom.MainLayout
-import com.markensic.qrchecker.viewmodel.AppSharedViewModel
+import com.markensic.qrchecker.ui.base.BaseActivity
 import com.markensic.qrchecker.viewmodel.MainViewModel
-import com.markensic.sdk.global.sdkLogd
-import org.markensic.mvvm.base.BaseDataBindingActivity
+import com.markensic.sdk.global.log.CoreLog
 import org.markensic.mvvm.databinding.DataBindingImpl
 import org.markensic.mvvm.databinding.StateViewModelImpl
 
-class MainActivity : BaseDataBindingActivity() {
-
-  private val sharedViewModel by lazy {
-    getAndroidScopeViewModel(AppSharedViewModel::class)
-  }
+class MainActivity : BaseActivity() {
 
   private val activityViewModel by lazy {
     getActivityScopeViewModel(MainViewModel::class)
@@ -31,15 +19,15 @@ class MainActivity : BaseDataBindingActivity() {
   override fun getDataBindingImpl(): DataBindingImpl =
     DataBindingImpl(R.layout.activity_main, StateViewModelImpl(BR.vm, activityViewModel))
 
+  fun nav() = Navigation.findNavController(this, R.id.main_fragment_host)
+
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
 
     sharedViewModel.name.observe(this) {
-      sdkLogd("MainActivity -> $it")
+      CoreLog.d("MainActivity -> $it")
     }
 
-    Navigation.findNavController(this, R.id.main_fragment_host)
-
-
+//    nav()
   }
 }

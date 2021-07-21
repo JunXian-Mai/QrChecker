@@ -1,4 +1,4 @@
 rootProject.name = "QrChecker"
-include ':sdk'
+include ':core'
 include ':app'
 include ':mvvm'
