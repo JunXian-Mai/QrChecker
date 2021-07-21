@@ -1,9 +1,10 @@
 package com.markensic.qrchecker.ui.page
 
+import android.content.Context
 import android.os.Bundle
+import android.util.SparseArray
 import android.view.View
 import android.view.ViewGroup
-import androidx.databinding.ViewDataBinding
 import com.markensic.qrchecker.R
 import com.markensic.qrchecker.ui.base.BaseFragment
 import com.markensic.qrchecker.ui.custom.MainLayoutTmp
@@ -23,11 +24,11 @@ class LoginFragment : BaseFragment() {
     nav().navigate(R.id.action_secondFragment_to_thirdFragment)
   }
 
-  override fun onDataBindingCreate(databinding: ViewDataBinding) {
-    (databinding.root as ViewGroup).addView(
-      MainLayoutTmp(hostActivity!!).apply {
-        tag = "MainLayout"
-
+  override fun bindView(context: Context): SparseArray<View>? {
+    val spArray = SparseArray<View>()
+    spArray.append(
+      0,
+      MainLayoutTmp(context).apply {
         showTv.text = "SecondFragment"
 
         nextEvent.setOnClickListener {
@@ -41,6 +42,7 @@ class LoginFragment : BaseFragment() {
         eventTv.text = sharedViewModel.name.value
       }
     )
+    return spArray
   }
 
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

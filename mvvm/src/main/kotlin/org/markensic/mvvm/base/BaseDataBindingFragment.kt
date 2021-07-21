@@ -2,6 +2,7 @@ package org.markensic.mvvm.base
 
 import android.content.Context
 import android.os.Bundle
+import android.util.SparseArray
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -15,13 +16,16 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelStoreOwner
 import org.markensic.mvvm.databinding.DataBindingImpl
+import org.markensic.mvvm.databinding.DataBindingLayout
 import kotlin.reflect.KClass
 
 abstract class BaseDataBindingFragment : Fragment() {
 
   protected abstract fun getDataBindingImpl(): DataBindingImpl
 
-  protected open fun onDataBindingCreate(databinding: ViewDataBinding) {}
+  protected open fun bindView(context: Context): SparseArray<View>? {
+    return null
+  }
 
   private var databinding: ViewDataBinding? = null
   protected var hostActivity: AppCompatActivity? = null
@@ -56,6 +60,14 @@ abstract class BaseDataBindingFragment : Fragment() {
   protected fun getDataBinding(): ViewDataBinding =
     databinding ?: throw NullPointerException("DataBinding not yet initialize or be destroyed")
 
+  protected fun ViewDataBinding.addView(view: View) {
+    if (root is ViewGroup) {
+      (root as ViewGroup).addView(view)
+    } else {
+      throw IllegalStateException("DataBinding root is not a ViewGroup")
+    }
+  }
+
   override fun onAttach(context: Context) {
     super.onAttach(context)
     hostActivity = context as AppCompatActivity
@@ -65,15 +77,23 @@ abstract class BaseDataBindingFragment : Fragment() {
     val dataBindingImpl = getDataBindingImpl()
 
     val binding: ViewDataBinding = DataBindingUtil.inflate(inflater, dataBindingImpl.layoutId, container, false)
-    binding.lifecycleOwner = this
-    dataBindingImpl.stateViewModelImpl?.let {
-      binding.setVariable(it.stateVariableId, it.stateViewModel)
-    }
-    dataBindingImpl.variableParams.forEach { key, value ->
-      binding.setVariable(key, value)
-    }
+    binding.apply {
+      bindView(hostActivity!!)?.forEach { key, value ->
+        if (value is DataBindingLayout) {
+          value.bindVariableParams(dataBindingImpl.variableParams)
+        }
+        addView(value)
+      }
 
-    onDataBindingCreate(binding)
+      lifecycleOwner = this@BaseDataBindingFragment
+
+      dataBindingImpl.stateViewModelImpl?.let {
+        setVariable(it.stateVariableId, it.stateViewModel)
+      }
+      dataBindingImpl.variableParams.forEach { key, value ->
+        setVariable(key, value)
+      }
+    }
 
     databinding = binding
 

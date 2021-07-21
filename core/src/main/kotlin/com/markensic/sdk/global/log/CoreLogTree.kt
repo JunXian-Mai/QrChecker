@@ -4,7 +4,7 @@ import android.os.Build
 import android.util.Log
 import java.util.regex.Pattern
 
-internal class CoreLogTree: Timber.Tree() {
+internal class CoreLogTree : Timber.Tree() {
   private val fqcnIgnore = listOf(
     Timber::class.java.name,
     Timber::class.java.name,

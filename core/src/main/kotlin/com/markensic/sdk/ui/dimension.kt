@@ -10,20 +10,9 @@ val Int.px
 
 val Int.dp
   get() =
-    this.toFloat().dp
-
-val Int.dp2Int
-  get() =
     this.toFloat().dp.toInt()
 
 val Float.dp
-  get() = TypedValue.applyDimension(
-    TypedValue.COMPLEX_UNIT_DIP,
-    this,
-    Resources.getSystem().displayMetrics
-  )
-
-val Float.dp2Int
   get() = TypedValue.applyDimension(
     TypedValue.COMPLEX_UNIT_DIP,
     this,

@@ -7,11 +7,15 @@ import android.widget.ImageView
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.view.updateMargins
 import com.markensic.qrchecker.R
-import com.markensic.sdk.ui.*
+import com.markensic.sdk.ui.Display
+import com.markensic.sdk.ui.Ui
+import com.markensic.sdk.ui.dp
+import com.markensic.sdk.ui.matchParent
+import org.markensic.mvvm.databinding.DataBindingLayout
 
-class MainLayout@JvmOverloads constructor(
+class MainLayout @JvmOverloads constructor(
   context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
-) : CustomLayout(context, attrs, defStyleAttr) {
+) : DataBindingLayout(context, attrs, defStyleAttr) {
 
   init {
     this.tag = tag ?: MainLayout::class.simpleName
@@ -27,15 +31,15 @@ class MainLayout@JvmOverloads constructor(
   val loginIv = ImageView(context).apply {
     setImageResource(R.drawable.ic_user)
     scaleType = ImageView.ScaleType.FIT_XY
-    addView(this, 35.dp2Int, 35.dp2Int) {
-      updateMargins(top = 15.dp2Int, right = 15.dp2Int)
+    addView(this, 35.dp, 35.dp) {
+      updateMargins(top = 15.dp, right = 15.dp)
     }
   }
 
   val qrScaneIv = ImageView(context).apply {
     setImageResource(R.drawable.scan_qr)
     scaleType = ImageView.ScaleType.FIT_CENTER
-    addView(this, 223.dp2Int, 179.dp2Int)
+    addView(this, 223.dp, 179.dp)
   }
 
   override fun onMeasureChildren(widthMeasureSpec: Int, heightMeasureSpec: Int) {

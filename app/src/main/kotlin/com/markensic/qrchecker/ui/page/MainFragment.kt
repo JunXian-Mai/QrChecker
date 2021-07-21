@@ -1,9 +1,10 @@
 package com.markensic.qrchecker.ui.page
 
+import android.content.Context
 import android.os.Bundle
+import android.util.SparseArray
 import android.view.View
-import android.view.ViewGroup
-import androidx.databinding.ViewDataBinding
+import com.markensic.qrchecker.BR
 import com.markensic.qrchecker.R
 import com.markensic.qrchecker.ui.base.BaseFragment
 import com.markensic.qrchecker.ui.custom.MainLayout
@@ -17,23 +18,25 @@ class MainFragment : BaseFragment() {
     getFragmentScopeViewModel(MainFragmentViewModel::class)
   }
 
-  override fun getDataBindingImpl(): DataBindingImpl = DataBindingImpl(R.layout.fragment_main)
+  override fun getDataBindingImpl(): DataBindingImpl = DataBindingImpl(R.layout.fragment_main).apply {
+    addVariableParam(BR.vm, mainFragmentViewModel)
+  }
 
   private fun navSecondPage() {
     nav().navigate(R.id.action_mainFragment_to_secondFragment)
   }
 
-  override fun onDataBindingCreate(databinding: ViewDataBinding) {
-    (databinding.root as ViewGroup).addView(
+  override fun bindView(context: Context): SparseArray<View>? {
+    val spArray = SparseArray<View>()
+    spArray.append(
+      0,
       MainLayout(hostActivity!!).apply {
-        tag = "MainLayout"
-
-
         loginIv.setOnClickListener {
           navSecondPage()
         }
       }
     )
+    return spArray
   }
 
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -41,7 +44,6 @@ class MainFragment : BaseFragment() {
 
     sharedViewModel.name.observe(this) {
       CoreLog.d("MainFragment -> $it")
-
     }
   }
 }

@@ -6,7 +6,8 @@ import android.util.AttributeSet
 import android.view.Gravity
 import android.widget.Button
 import android.widget.TextView
-import androidx.core.view.*
+import androidx.core.view.updateMargins
+import androidx.core.view.updatePadding
 import com.markensic.qrchecker.R
 import com.markensic.sdk.ui.*
 
@@ -32,7 +33,7 @@ class MainLayoutTmp @JvmOverloads constructor(
   val showTv = TextView(context).apply {
     background = ColorDrawable(resources.getColor(R.color.teal_200, null))
     addView(this, matchParent, wrapContent) {
-      updatePadding(left = 5.dp2Int, right = 5.dp2Int)
+      updatePadding(left = 5.dp, right = 5.dp)
     }
   }
 
@@ -40,8 +41,8 @@ class MainLayoutTmp @JvmOverloads constructor(
     background = ColorDrawable(resources.getColor(R.color.white, null))
     text = "to next page"
     addView(this, wrapContent, wrapContent) {
-      updatePadding(left = 5.dp2Int, right = 5.dp2Int)
-      updateMargins(left = 5.dp2Int, top = 5.dp2Int)
+      updatePadding(left = 5.dp, right = 5.dp)
+      updateMargins(left = 5.dp, top = 5.dp)
     }
   }
 
@@ -49,16 +50,16 @@ class MainLayoutTmp @JvmOverloads constructor(
     background = ColorDrawable(resources.getColor(R.color.white, null))
     text = "change SharedViewModel.name"
     addView(this, wrapContent, wrapContent) {
-      updatePadding(left = 5.dp2Int, right = 5.dp2Int)
-      updateMargins(left = 5.dp2Int, top = 5.dp2Int)
+      updatePadding(left = 5.dp, right = 5.dp)
+      updateMargins(left = 5.dp, top = 5.dp)
     }
   }
 
   val eventTv = TextView(context).apply {
     background = ColorDrawable(resources.getColor(R.color.teal_200, null))
     addView(this, matchParent, wrapContent) {
-      updatePadding(left = 5.dp2Int, right = 5.dp2Int)
-      updateMargins(left = 5.dp2Int, top = 5.dp2Int)
+      updatePadding(left = 5.dp, right = 5.dp)
+      updateMargins(left = 5.dp, top = 5.dp)
     }
   }
 
@@ -81,7 +82,7 @@ class MainLayoutTmp @JvmOverloads constructor(
   }
 
   override fun onLayout(changed: Boolean, l: Int, t: Int, r: Int, b: Int) {
-    statusBarTv.layout(0,0)
+    statusBarTv.layout(0, 0)
     contentUpTv.layout(0, statusBarTv.below)
     showTv.layout(0, contentUpTv.alignTop)
     nextEvent.layout(0, showTv.below)

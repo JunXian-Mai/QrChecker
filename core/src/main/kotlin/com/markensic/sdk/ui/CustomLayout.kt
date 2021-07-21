@@ -46,7 +46,8 @@ abstract class CustomLayout @JvmOverloads constructor(
         x + marginStart,
         y + marginTop,
         x + measuredWidth + marginStart,
-        y + measuredHeight + marginTop)
+        y + measuredHeight + marginTop
+      )
     } else {
       layout(this@CustomLayout.measuredWidth - x - measuredWidth - marginEnd, y)
     }
@@ -98,7 +99,7 @@ abstract class CustomLayout @JvmOverloads constructor(
 
   protected val View.measuredHeightWithMargins get() = (measuredHeight + marginTop + marginBottom)
 
-  // todo 在 View.layout 时，如果需要根据其他 AnchorView 时来定位，为了防止 Anchor.margin 失效
+  // todo 在 View.layout 时，如果需要根据其他 AnchorView 时来定位，为了防止 AnchorView.margin 失效
   protected val View.alignLeft get() = left
 
   protected val View.alignTop get() = top
@@ -106,5 +107,5 @@ abstract class CustomLayout @JvmOverloads constructor(
   protected val View.toRightOf get() = right + marginEnd
 
   protected val View.below get() = bottom + marginBottom
-  // todo END
+  // todo end
 }

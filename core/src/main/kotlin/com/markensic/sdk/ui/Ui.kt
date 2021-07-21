@@ -5,7 +5,10 @@ import android.content.res.Resources
 import android.graphics.Color
 import android.graphics.Rect
 import android.os.Build
-import android.view.*
+import android.view.View
+import android.view.ViewTreeObserver
+import android.view.Window
+import android.view.WindowManager
 import com.markensic.sdk.global.App
 
 object Ui {

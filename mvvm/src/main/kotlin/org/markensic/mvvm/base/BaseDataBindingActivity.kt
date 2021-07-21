@@ -1,9 +1,12 @@
 package org.markensic.mvvm.base
 
+import android.content.Context
 import android.graphics.Color
 import android.graphics.Typeface
 import android.os.Bundle
+import android.util.SparseArray
 import android.view.Gravity
+import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
@@ -21,13 +24,16 @@ import com.markensic.sdk.ui.sp
 import com.markensic.sdk.utils.PackageUtils
 import org.markensic.mvvm.R
 import org.markensic.mvvm.databinding.DataBindingImpl
+import org.markensic.mvvm.databinding.DataBindingLayout
 import kotlin.reflect.KClass
 
 abstract class BaseDataBindingActivity : AppCompatActivity() {
 
   protected abstract fun getDataBindingImpl(): DataBindingImpl
 
-  protected open fun onDataBindingCreate(databinding: ViewDataBinding) {}
+  protected open fun bindView(context: Context): SparseArray<View>? {
+    return null
+  }
 
   protected open fun isCustomImmersion() = false
 
@@ -57,6 +63,14 @@ abstract class BaseDataBindingActivity : AppCompatActivity() {
   protected fun getDataBinding(): ViewDataBinding =
     databinding ?: throw NullPointerException("DataBinding not yet initialize or be destroyed")
 
+  protected fun ViewDataBinding.addView(view: View) {
+    if (root is ViewGroup) {
+      (root as ViewGroup).addView(view)
+    } else {
+      throw IllegalStateException("DataBinding root is not a ViewGroup")
+    }
+  }
+
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     if (!isCustomImmersion()) {
@@ -66,21 +80,29 @@ abstract class BaseDataBindingActivity : AppCompatActivity() {
     val dataBindingImpl = getDataBindingImpl()
 
     val binding: ViewDataBinding = DataBindingUtil.setContentView(this, dataBindingImpl.layoutId)
-    binding.lifecycleOwner = this
-    dataBindingImpl.stateViewModelImpl?.let {
-      binding.setVariable(it.stateVariableId, it.stateViewModel)
-    }
-    dataBindingImpl.variableParams.forEach { key, value ->
-      binding.setVariable(key, value)
+    binding.apply {
+      bindView(this@BaseDataBindingActivity)?.forEach { key, value ->
+        if (value is DataBindingLayout) {
+          value.bindVariableParams(dataBindingImpl.variableParams)
+        }
+        addView(value)
+      }
+
+      lifecycleOwner = this@BaseDataBindingActivity
+
+      dataBindingImpl.stateViewModelImpl?.let {
+        setVariable(it.stateVariableId, it.stateViewModel)
+      }
+      dataBindingImpl.variableParams.forEach { key, value ->
+        setVariable(key, value)
+      }
     }
 
-    onDataBindingCreate(binding)
+    databinding = binding
 
     if (App.isDebug) {
       addDebugVersionTip()
     }
-
-    databinding = binding
   }
 
   override fun onDestroy() {

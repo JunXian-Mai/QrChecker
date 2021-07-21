@@ -4,6 +4,10 @@
 
   <data>
 
+    <variable
+      name="vm"
+      type="com.markensic.qrchecker.viewmodel.MainFragmentViewModel" />
+
   </data>
 
   <LinearLayout
