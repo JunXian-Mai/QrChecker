@@ -4,9 +4,9 @@ import android.view.View
 import com.markensic.core.global.log.CoreLog
 
 class OnDebouncingClickProxy(
-  val proxy: (View) -> Unit,
   val isGlobal: Boolean = false,
-  val duration: Long = DEFAULT_DURATION
+  val duration: Long = DEFAULT_DURATION,
+  val proxy: (View) -> Unit
 ) : View.OnClickListener {
 
   companion object {
@@ -57,19 +57,19 @@ class OnDebouncingClickProxy(
 }
 
 fun View.applyOnDebouncingClickProxy(
-  listener: (View) -> Unit,
   isGlobal: Boolean = false,
-  duration: Long = OnDebouncingClickProxy.DEFAULT_DURATION
+  duration: Long = OnDebouncingClickProxy.DEFAULT_DURATION,
+  listener: (View) -> Unit
 ) {
-  setOnClickListener(OnDebouncingClickProxy(listener, isGlobal, duration))
+  setOnClickListener(OnDebouncingClickProxy(isGlobal, duration, listener))
 }
 
 fun Array<View>.applyOnDebouncingClickProxy(
-  listener: (View) -> Unit,
   isGlobal: Boolean = false,
-  duration: Long = OnDebouncingClickProxy.DEFAULT_DURATION
+  duration: Long = OnDebouncingClickProxy.DEFAULT_DURATION,
+  listener: (View) -> Unit
 ) {
   forEach {
-    it.applyOnDebouncingClickProxy(listener, isGlobal, duration)
+    it.applyOnDebouncingClickProxy(isGlobal, duration, listener)
   }
 }

@@ -4,6 +4,7 @@ import android.content.Context
 import android.os.Bundle
 import android.util.SparseArray
 import android.view.View
+import androidx.core.util.set
 import com.markensic.qrchecker.BR
 import com.markensic.qrchecker.R
 import com.markensic.qrchecker.ui.base.BaseFragment
@@ -20,22 +21,12 @@ class MainFragment : BaseFragment() {
 
   override fun getDataBindingImpl(): DataBindingImpl = DataBindingImpl(R.layout.fragment_main).apply {
     addVariableParam(BR.vm, mainFragmentViewModel)
-  }
-
-  private fun navSecondPage() {
-    nav().navigate(R.id.action_mainFragment_to_loginFragment)
+    addVariableParam(BR.click, ClickProxy())
   }
 
   override fun bindView(context: Context): SparseArray<View>? {
     val spArray = SparseArray<View>()
-    spArray.append(
-      0,
-      MainLayout(hostActivity!!).apply {
-        loginIv.setOnClickListener {
-          navSecondPage()
-        }
-      }
-    )
+    spArray[0] = MainLayout(hostActivity!!)
     return spArray
   }
 
@@ -44,6 +35,12 @@ class MainFragment : BaseFragment() {
 
     sharedViewModel.name.observe(this) {
       CoreLog.d("MainFragment -> $it")
+    }
+  }
+
+  inner class ClickProxy {
+    fun toLogin() {
+      nav().navigate(R.id.action_mainFragment_to_loginFragment)
     }
   }
 }

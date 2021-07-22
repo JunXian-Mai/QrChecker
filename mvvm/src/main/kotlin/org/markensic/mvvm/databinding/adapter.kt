@@ -7,5 +7,5 @@ import com.markensic.core.framework.event.applyOnDebouncingClickProxy
 
 @BindingAdapter("mvvm:onDebouncingClick")
 fun onDebouncingClick(view: View, listener: (View) -> Unit) {
-  view.applyOnDebouncingClickProxy(listener)
+  view.applyOnDebouncingClickProxy(listener = listener)
 }

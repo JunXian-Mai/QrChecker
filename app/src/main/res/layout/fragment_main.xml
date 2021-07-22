@@ -8,6 +8,10 @@
       name="vm"
       type="com.markensic.qrchecker.viewmodel.MainFragmentViewModel" />
 
+    <variable
+      name="click"
+      type="com.markensic.qrchecker.ui.page.MainFragment.ClickProxy" />
+
   </data>
 
   <LinearLayout

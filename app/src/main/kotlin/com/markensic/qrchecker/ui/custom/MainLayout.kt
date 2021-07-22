@@ -6,11 +6,14 @@ import android.view.View
 import android.widget.ImageView
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.view.updateMargins
+import com.markensic.core.framework.event.applyOnDebouncingClickProxy
 import com.markensic.qrchecker.R
 import com.markensic.core.framework.ui.Display
 import com.markensic.core.framework.ui.Ui
 import com.markensic.core.framework.ui.dp
 import com.markensic.core.framework.ui.matchParent
+import com.markensic.qrchecker.BR
+import com.markensic.qrchecker.ui.page.MainFragment
 import org.markensic.mvvm.databinding.DataBindingLayout
 
 class MainLayout @JvmOverloads constructor(
@@ -31,6 +34,9 @@ class MainLayout @JvmOverloads constructor(
   val loginIv = ImageView(context).apply {
     setImageResource(R.drawable.ic_user)
     scaleType = ImageView.ScaleType.FIT_XY
+    applyOnDebouncingClickProxy {
+      getVariable<MainFragment.ClickProxy>(BR.click)?.toLogin()
+    }
     addView(this, 35.dp, 35.dp) {
       updateMargins(top = 15.dp, right = 15.dp)
     }
