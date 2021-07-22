@@ -2,6 +2,7 @@ package com.markensic.qrchecker.ui.page
 
 import android.os.Bundle
 import android.view.View
+import com.markensic.core.global.log.CoreLog
 import com.markensic.qrchecker.BR
 import com.markensic.qrchecker.R
 import com.markensic.qrchecker.ui.base.BaseFragment
@@ -16,14 +17,23 @@ class LoginFragment : BaseFragment() {
 
   override fun getDataBindingImpl(): DataBindingImpl = DataBindingImpl(R.layout.fragment_login).apply {
     addVariableParam(BR.vm, loginState)
-  }
-
-  private fun navLoginIn() {
-    nav().navigate(R.id.action_loginFragment_to_userFragment)
+    addVariableParam(BR.click, ClickProxy())
   }
 
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
+  }
 
+  inner class ClickProxy {
+
+    fun login(v: View) {
+      CoreLog.d(
+        """
+          accout: ${loginState.account.get()}
+          password: ${loginState.password.get()}
+        """.trimIndent()
+      )
+      nav().navigate(R.id.action_loginFragment_to_userFragment)
+    }
   }
 }

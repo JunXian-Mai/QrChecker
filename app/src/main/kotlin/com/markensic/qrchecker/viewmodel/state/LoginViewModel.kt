@@ -11,13 +11,4 @@ class LoginViewModel : ViewModel() {
 
   val password = ObservableField("")
 
-  fun doLoginIn(): Int {
-    CoreLog.d(
-      """
-      accout: ${account.get()}
-      password: ${password.get()}
-    """.trimIndent()
-    )
-    return 1
-  }
 }

@@ -81,7 +81,7 @@ abstract class BaseDataBindingActivity : AppCompatActivity() {
 
     val binding: ViewDataBinding = DataBindingUtil.setContentView(this, dataBindingImpl.layoutId)
     binding.apply {
-      bindView(this@BaseDataBindingActivity)?.forEach { key, value ->
+      bindView(this@BaseDataBindingActivity)?.forEach { _, value ->
         if (value is DataBindingLayout) {
           value.bindVariableParams(dataBindingImpl.variableParams)
         }

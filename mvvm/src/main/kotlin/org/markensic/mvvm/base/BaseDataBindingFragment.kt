@@ -78,7 +78,7 @@ abstract class BaseDataBindingFragment : Fragment() {
 
     val binding: ViewDataBinding = DataBindingUtil.inflate(inflater, dataBindingImpl.layoutId, container, false)
     binding.apply {
-      bindView(hostActivity!!)?.forEach { key, value ->
+      bindView(hostActivity!!)?.forEach { _, value ->
         if (value is DataBindingLayout) {
           value.bindVariableParams(dataBindingImpl.variableParams)
         }

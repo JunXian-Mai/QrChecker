@@ -2,13 +2,17 @@
 <layout
   xmlns:android="http://schemas.android.com/apk/res/android"
   xmlns:app="http://schemas.android.com/apk/res-auto"
-  xmlns:mvvm="http://schemas.android.com/tools">
+  xmlns:mvvm="http://schemas.android.com/apk/res-auto">
 
   <data>
 
     <variable
       name="vm"
       type="com.markensic.qrchecker.viewmodel.state.LoginViewModel" />
+
+    <variable
+      name="click"
+      type="com.markensic.qrchecker.ui.page.LoginFragment.ClickProxy" />
 
   </data>
 
@@ -80,7 +84,7 @@
       app:layout_constraintEnd_toEndOf="parent"
       app:layout_constraintStart_toStartOf="parent"
       app:layout_constraintTop_toBottomOf="@id/ed_password"
-      mvvm:onDebouncingClick="@{() -> vm.doLoginIn()}" />
+      mvvm:onDebouncingClick="@{(v) -> click.login(v)}"/>
 
   </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
