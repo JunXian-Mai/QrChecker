@@ -15,6 +15,10 @@ class MainLayoutTmp @JvmOverloads constructor(
   context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
 ) : CustomLayout(context, attrs, defStyleAttr) {
 
+  init {
+    this.tag = tag ?: MainLayoutTmp::class.simpleName
+  }
+
   val contentHeight = Display.realHeight - Ui.statusBarSize - Ui.navigationBarSize
 
   val statusBarTv = TextView(context).apply {

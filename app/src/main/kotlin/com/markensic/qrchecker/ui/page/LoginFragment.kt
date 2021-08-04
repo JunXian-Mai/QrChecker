@@ -22,6 +22,9 @@ class LoginFragment : BaseFragment() {
 
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
+    sharedViewModel.name.observe(viewLifecycleOwner) {
+      CoreLog.d("LoginFragment -> $it")
+    }
   }
 
   inner class ClickProxy {

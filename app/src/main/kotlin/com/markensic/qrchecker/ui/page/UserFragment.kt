@@ -44,7 +44,7 @@ class UserFragment : BaseFragment() {
 
     sharedViewModel.name.observe(this) {
       CoreLog.d("ThirdFragment -> $it")
-      (getDataBinding().root as ViewGroup).findViewWithTag<MainLayoutTmp>("MainLayout").apply {
+      (getDataBinding().root as ViewGroup).findViewWithTag<MainLayoutTmp>("MainLayoutTmp").apply {
         eventTv.text = it
       }
     }

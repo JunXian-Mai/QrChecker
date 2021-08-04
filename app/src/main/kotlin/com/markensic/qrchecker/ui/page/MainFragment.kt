@@ -40,6 +40,7 @@ class MainFragment : BaseFragment() {
 
   inner class ClickProxy {
     fun toLogin() {
+      sharedViewModel.changeName("to Login")
       nav().navigate(R.id.action_mainFragment_to_loginFragment)
     }
   }
