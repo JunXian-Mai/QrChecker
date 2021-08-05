@@ -2,7 +2,7 @@ package com.markensic.core.global.log
 
 import android.os.Build
 import android.os.DeadSystemException
-import com.markensic.core.delegate.SpMap
+import com.markensic.core.framework.delegate.SpMap
 import com.markensic.core.global.App
 import com.markensic.core.global.log.Timber.Forest.plant
 import com.markensic.core.utils.FileUtils

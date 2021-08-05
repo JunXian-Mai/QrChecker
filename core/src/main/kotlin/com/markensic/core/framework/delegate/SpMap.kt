@@ -1,4 +1,4 @@
-package com.markensic.core.delegate
+package com.markensic.core.framework.delegate
 
 import android.content.Context
 import com.markensic.core.global.App
