@@ -15,8 +15,6 @@ import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelStoreOwner
 import com.markensic.core.framework.lazy.LazyImpl
 import com.markensic.core.framework.ui.Ui
 import com.markensic.core.framework.ui.dp
@@ -26,7 +24,8 @@ import com.markensic.core.utils.PackageUtils
 import org.markensic.mvvm.R
 import org.markensic.mvvm.databinding.DataBindingImpl
 import org.markensic.mvvm.databinding.DataBindingLayout
-import kotlin.reflect.KClass
+import org.markensic.mvvm.viewmodel.androidViewModelProvider
+import org.markensic.mvvm.viewmodel.normalViewModelProvider
 
 abstract class BaseDataBindingActivity : AppCompatActivity() {
 
@@ -36,32 +35,18 @@ abstract class BaseDataBindingActivity : AppCompatActivity() {
 
   protected open fun customImmersion() = false
 
-  val androidViewModelProvider: ViewModelProvider by lazy {
-    val app = this.application
-    if (app !is ViewModelStoreOwner) {
-      throw IllegalStateException(
-        "Your application is not yet implements ViewModelStoreOwner."
-      )
-    }
-    ViewModelProvider.AndroidViewModelFactory.getInstance(app).let {
-      ViewModelProvider(app as ViewModelStoreOwner, it)
-    }
-  }
-
-  val activityViewModelProvider: ViewModelProvider by lazy {
-    ViewModelProvider(this)
-  }
-
   private var databinding: ViewDataBinding? = null
 
   private lateinit var versionTextView: TextView
 
+  val androidViewModelProvider by androidViewModelProvider { this }
   inline fun <reified VM : AndroidViewModel> androidScopeViewModel(): Lazy<VM> {
     return LazyImpl {
       androidViewModelProvider.get(VM::class.java)
     }
   }
 
+  val activityViewModelProvider by normalViewModelProvider { this }
   inline fun <reified VM : ViewModel> activityScopeViewModel(): Lazy<VM> {
     return LazyImpl {
       activityViewModelProvider.get(VM::class.java)
