@@ -32,19 +32,13 @@ class UserFragment : BaseFragment() {
         }
 
         eventTv.text = sharedViewModel.name.value
+
+        sharedViewModel.name.observe(this@UserFragment) {
+          CoreLog.d("ThirdFragment -> $it")
+          eventTv.text = it
+        }
       }
     )
     return spArray
-  }
-
-  override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-    super.onViewCreated(view, savedInstanceState)
-
-    sharedViewModel.name.observe(this) {
-      CoreLog.d("ThirdFragment -> $it")
-      (getDataBinding().root as ViewGroup).findViewWithTag<MainLayoutTmp>("MainLayoutTmp").apply {
-        eventTv.text = it
-      }
-    }
   }
 }

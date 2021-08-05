@@ -84,7 +84,7 @@
       app:layout_constraintEnd_toEndOf="parent"
       app:layout_constraintStart_toStartOf="parent"
       app:layout_constraintTop_toBottomOf="@id/ed_password"
-      mvvm:onDebouncingClick="@{(v) -> click.login(v)}"/>
+      android:onDebouncingClick="@{(v) -> click.login(v)}"/>
 
   </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

@@ -5,7 +5,7 @@ import androidx.databinding.BindingAdapter
 import com.markensic.core.framework.event.OnDebouncingClickProxy
 import com.markensic.core.framework.event.applyOnDebouncingClickProxy
 
-@BindingAdapter("mvvm:onDebouncingClick")
+@BindingAdapter("android:onDebouncingClick")
 fun onDebouncingClick(view: View, listener: View.OnClickListener) {
   view.applyOnDebouncingClickProxy {
     listener.onClick(it)
