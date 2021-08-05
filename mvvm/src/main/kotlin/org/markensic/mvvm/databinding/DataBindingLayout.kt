@@ -15,7 +15,7 @@ abstract class DataBindingLayout @JvmOverloads constructor(
 
   private val variableParams: SparseArray<Any> = SparseArray()
 
-  fun <T> getVariable(variableId: Int): T? {
+  fun <T> findVariableById(variableId: Int): T? {
     try {
       return if (variableParams.size() <= 0) {
         CoreLog.e(ArrayIndexOutOfBoundsException("variableParams don't store variable"))

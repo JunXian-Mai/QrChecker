@@ -35,7 +35,7 @@ abstract class BaseDataBindingActivity : AppCompatActivity() {
     return null
   }
 
-  protected open fun isCustomImmersion() = false
+  protected open fun customImmersion() = false
 
   private val androidViewModelProvider: ViewModelProvider by lazy {
     val app = this.application
@@ -73,7 +73,7 @@ abstract class BaseDataBindingActivity : AppCompatActivity() {
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
-    if (!isCustomImmersion()) {
+    if (!customImmersion()) {
       Ui.setSystemBar(window)
     }
 

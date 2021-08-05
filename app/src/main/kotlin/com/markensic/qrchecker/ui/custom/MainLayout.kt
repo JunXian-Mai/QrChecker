@@ -35,7 +35,7 @@ class MainLayout @JvmOverloads constructor(
     setImageResource(R.drawable.ic_user)
     scaleType = ImageView.ScaleType.FIT_XY
     applyOnDebouncingClickProxy {
-      getVariable<MainFragment.ClickProxy>(BR.click)?.toLogin()
+      findVariableById<MainFragment.ClickProxy>(BR.click)?.toLogin()
     }
     addView(this, 35.dp, 35.dp) {
       updateMargins(top = 15.dp, right = 15.dp)
