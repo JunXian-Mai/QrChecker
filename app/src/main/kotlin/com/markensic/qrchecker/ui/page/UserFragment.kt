@@ -14,9 +14,7 @@ import org.markensic.mvvm.databinding.DataBindingImpl
 
 class UserFragment : BaseFragment() {
 
-  private val thirdFragmentViewModel by lazy {
-    getFragmentScopeViewModel(ThirdFragmentViewModel::class)
-  }
+  private val thirdFragmentViewModel by fragmentScopeViewModel<ThirdFragmentViewModel>()
 
   override fun getDataBindingImpl(): DataBindingImpl = DataBindingImpl(R.layout.fragment_main)
 

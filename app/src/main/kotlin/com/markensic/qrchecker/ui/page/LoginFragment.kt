@@ -11,9 +11,7 @@ import org.markensic.mvvm.databinding.DataBindingImpl
 
 class LoginFragment : BaseFragment() {
 
-  private val loginState by lazy {
-    getFragmentScopeViewModel(LoginViewModel::class)
-  }
+  private val loginState by fragmentScopeViewModel<LoginViewModel>()
 
   override fun getDataBindingImpl(): DataBindingImpl = DataBindingImpl(R.layout.fragment_login).apply {
     addVariableParam(BR.vm, loginState)

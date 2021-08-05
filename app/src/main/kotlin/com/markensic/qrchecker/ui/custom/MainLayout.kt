@@ -20,9 +20,7 @@ class MainLayout @JvmOverloads constructor(
   context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
 ) : DataBindingLayout(context, attrs, defStyleAttr) {
 
-  init {
-    this.tag = tag ?: MainLayout::class.simpleName
-  }
+  val click by variableId<MainFragment.ClickProxy>(BR.click)
 
   val contentHeight = Display.realHeight - Ui.statusBarSize - Ui.navigationBarSize
 
@@ -35,7 +33,7 @@ class MainLayout @JvmOverloads constructor(
     setImageResource(R.drawable.ic_user)
     scaleType = ImageView.ScaleType.FIT_XY
     applyOnDebouncingClickProxy {
-      findVariableById<MainFragment.ClickProxy>(BR.click)?.toLogin()
+      click.toLogin()
     }
     addView(this, 35.dp, 35.dp) {
       updateMargins(top = 15.dp, right = 15.dp)

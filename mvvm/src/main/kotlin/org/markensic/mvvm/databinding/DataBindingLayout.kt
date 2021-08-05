@@ -4,6 +4,7 @@ import android.content.Context
 import android.util.AttributeSet
 import android.util.SparseArray
 import androidx.core.util.putAll
+import com.markensic.core.framework.lazy.LazyImpl
 import com.markensic.core.framework.ui.CustomLayout
 import com.markensic.core.global.log.CoreLog
 
@@ -13,9 +14,17 @@ abstract class DataBindingLayout @JvmOverloads constructor(
   defStyleAttr: Int = 0
 ) : CustomLayout(context, attrs, defStyleAttr) {
 
+  init {
+    this.tag = tag ?: this::class.simpleName
+  }
+
   private val variableParams: SparseArray<Any> = SparseArray()
 
-  fun <T> findVariableById(variableId: Int): T? {
+  fun <T> variableId(variableId: Int): Lazy<T> {
+    return LazyImpl{ findVariableById(variableId) }
+  }
+
+  private fun <T> findVariableById(variableId: Int): T? {
     try {
       return if (variableParams.size() <= 0) {
         CoreLog.e(ArrayIndexOutOfBoundsException("variableParams don't store variable"))

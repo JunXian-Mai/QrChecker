@@ -12,9 +12,7 @@ import org.markensic.mvvm.viewmodel.StateViewModelImpl
 
 class MainActivity : BaseActivity() {
 
-  private val activityViewModel by lazy {
-    getActivityScopeViewModel(MainViewModel::class)
-  }
+  private val activityViewModel by activityScopeViewModel<MainViewModel>()
 
   override fun getDataBindingImpl(): DataBindingImpl =
     DataBindingImpl(R.layout.activity_main, StateViewModelImpl(BR.vm, activityViewModel)).apply {

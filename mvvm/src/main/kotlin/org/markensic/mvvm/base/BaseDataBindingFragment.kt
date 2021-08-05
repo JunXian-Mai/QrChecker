@@ -15,6 +15,7 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelStoreOwner
+import com.markensic.core.framework.lazy.LazyImpl
 import org.markensic.mvvm.databinding.DataBindingImpl
 import org.markensic.mvvm.databinding.DataBindingLayout
 import kotlin.reflect.KClass
@@ -28,8 +29,10 @@ abstract class BaseDataBindingFragment : Fragment() {
   }
 
   private var databinding: ViewDataBinding? = null
+
   protected var hostActivity: AppCompatActivity? = null
-  private val androidViewModelProvider: ViewModelProvider by lazy {
+
+  val androidViewModelProvider: ViewModelProvider by lazy {
     val app = hostActivity?.application
       ?: throw IllegalStateException("Fragment be detached, can't create ViewModelProvider")
     if (app !is ViewModelStoreOwner) {
@@ -39,28 +42,39 @@ abstract class BaseDataBindingFragment : Fragment() {
       ViewModelProvider(app as ViewModelStoreOwner, it)
     }
   }
-  private val activityViewModelProvider: ViewModelProvider by lazy {
+
+  val activityViewModelProvider: ViewModelProvider by lazy {
     hostActivity?.let {
       ViewModelProvider(it)
     } ?: throw IllegalStateException("Fragment be detached, can't create ViewModelProvider")
   }
-  private val fragmentViewModelProvider: ViewModelProvider by lazy {
+
+  val fragmentViewModelProvider: ViewModelProvider by lazy {
     ViewModelProvider(this)
   }
 
-  protected fun <VM : AndroidViewModel> getAndroidScopeViewModel(kClass: KClass<VM>) =
-    androidViewModelProvider.get(kClass.java)
+  inline fun <reified VM : AndroidViewModel> androidScopeViewModel(): Lazy<VM> {
+    return LazyImpl {
+      androidViewModelProvider.get(VM::class.java)
+    }
+  }
 
-  protected fun <VM : ViewModel> getActivityScopeViewModel(kClass: KClass<VM>) =
-    activityViewModelProvider.get(kClass.java)
+  inline fun <reified VM : ViewModel> activityScopeViewModel(): Lazy<VM> {
+    return LazyImpl {
+      activityViewModelProvider.get(VM::class.java)
+    }
+  }
 
-  protected fun <VM : ViewModel> getFragmentScopeViewModel(kClass: KClass<VM>) =
-    fragmentViewModelProvider.get(kClass.java)
+  inline fun <reified VM : ViewModel> fragmentScopeViewModel(): Lazy<VM> {
+    return LazyImpl {
+      fragmentViewModelProvider.get(VM::class.java)
+    }
+  }
 
   protected fun getDataBinding(): ViewDataBinding =
     databinding ?: throw NullPointerException("DataBinding not yet initialize or be destroyed")
 
-  protected fun ViewDataBinding.addView(view: View) {
+  private fun ViewDataBinding.addView(view: View) {
     if (root is ViewGroup) {
       (root as ViewGroup).addView(view)
     } else {

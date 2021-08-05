@@ -17,6 +17,7 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelStoreOwner
+import com.markensic.core.framework.lazy.LazyImpl
 import com.markensic.core.framework.ui.Ui
 import com.markensic.core.framework.ui.dp
 import com.markensic.core.framework.ui.sp
@@ -31,13 +32,11 @@ abstract class BaseDataBindingActivity : AppCompatActivity() {
 
   protected abstract fun getDataBindingImpl(): DataBindingImpl
 
-  protected open fun bindView(context: Context): SparseArray<View>? {
-    return null
-  }
+  protected open fun bindView(context: Context): SparseArray<View>? = null
 
   protected open fun customImmersion() = false
 
-  private val androidViewModelProvider: ViewModelProvider by lazy {
+  val androidViewModelProvider: ViewModelProvider by lazy {
     val app = this.application
     if (app !is ViewModelStoreOwner) {
       throw IllegalStateException(
@@ -48,22 +47,28 @@ abstract class BaseDataBindingActivity : AppCompatActivity() {
       ViewModelProvider(app as ViewModelStoreOwner, it)
     }
   }
-  private val activityViewModelProvider: ViewModelProvider by lazy {
+
+  val activityViewModelProvider: ViewModelProvider by lazy {
     ViewModelProvider(this)
   }
+
   private var databinding: ViewDataBinding? = null
+
   private lateinit var versionTextView: TextView
 
-  protected fun <VM : AndroidViewModel> getAndroidScopeViewModel(kClass: KClass<VM>) =
-    androidViewModelProvider.get(kClass.java)
+  inline fun <reified VM : AndroidViewModel> androidScopeViewModel(): Lazy<VM> {
+    return LazyImpl {
+      androidViewModelProvider.get(VM::class.java)
+    }
+  }
 
-  protected fun <VM : ViewModel> getActivityScopeViewModel(kClass: KClass<VM>) =
-    activityViewModelProvider.get(kClass.java)
+  inline fun <reified VM : ViewModel> activityScopeViewModel(): Lazy<VM> {
+    return LazyImpl {
+      activityViewModelProvider.get(VM::class.java)
+    }
+  }
 
-  protected fun getDataBinding(): ViewDataBinding =
-    databinding ?: throw NullPointerException("DataBinding not yet initialize or be destroyed")
-
-  protected fun ViewDataBinding.addView(view: View) {
+  private fun ViewDataBinding.addView(view: View) {
     if (root is ViewGroup) {
       (root as ViewGroup).addView(view)
     } else {

@@ -5,7 +5,5 @@ import org.markensic.mvvm.base.BaseDataBindingActivity
 
 abstract class BaseActivity : BaseDataBindingActivity() {
 
-  protected val sharedViewModel by lazy {
-    getAndroidScopeViewModel(SharedViewModel::class)
-  }
+  protected val sharedViewModel by androidScopeViewModel<SharedViewModel>()
 }
