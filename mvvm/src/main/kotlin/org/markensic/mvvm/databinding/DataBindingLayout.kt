@@ -4,18 +4,29 @@ import android.content.Context
 import android.util.AttributeSet
 import android.util.SparseArray
 import androidx.core.util.putAll
+import androidx.lifecycle.*
 import com.markensic.core.framework.lazy.LazyImpl
 import com.markensic.core.framework.ui.CustomLayout
+import com.markensic.core.global.App
 import com.markensic.core.global.log.CoreLog
+import org.markensic.mvvm.base.BaseDataBindingActivity
+import org.markensic.mvvm.viewmodel.androidViewModelProvider
+import java.lang.IllegalArgumentException
 
 abstract class DataBindingLayout @JvmOverloads constructor(
   context: Context,
   attrs: AttributeSet? = null,
   defStyleAttr: Int = 0
-) : CustomLayout(context, attrs, defStyleAttr) {
+) : CustomLayout(context, attrs, defStyleAttr), LifecycleOwner {
 
-  init {
-    this.tag = tag ?: this::class.simpleName
+  val androidViewModelProvider: ViewModelProvider by androidViewModelProvider {
+    App.sApplication
+  }
+
+  inline fun <reified VM : AndroidViewModel> androidScopeViewModel(): Lazy<VM> {
+    return LazyImpl {
+      androidViewModelProvider.get(VM::class.java)
+    }
   }
 
   private val variableParams: SparseArray<Any> = SparseArray()
@@ -37,8 +48,15 @@ abstract class DataBindingLayout @JvmOverloads constructor(
     }
   }
 
-  fun bindVariableParams(params: SparseArray<Any>) {
-    variableParams.clear()
-    variableParams.putAll(params)
+  fun bindVariableParams(variableId : Int, model: Any) {
+    variableParams.put(variableId, model)
+  }
+
+  override fun getLifecycle(): Lifecycle {
+    return if (context is LifecycleOwner) {
+      (context as LifecycleOwner).lifecycle
+    } else {
+      throw IllegalArgumentException("This context is not a LifecycleOwner!")
+    }
   }
 }

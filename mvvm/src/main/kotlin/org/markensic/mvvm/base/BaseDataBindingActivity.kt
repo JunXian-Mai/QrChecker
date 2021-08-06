@@ -1,10 +1,8 @@
 package org.markensic.mvvm.base
 
-import android.content.Context
 import android.graphics.Color
 import android.graphics.Typeface
 import android.os.Bundle
-import android.util.SparseArray
 import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup
@@ -31,15 +29,15 @@ abstract class BaseDataBindingActivity : AppCompatActivity() {
 
   protected abstract fun getDataBindingImpl(): DataBindingImpl
 
-  protected open fun bindView(context: Context): SparseArray<View>? = null
-
   protected open fun customImmersion() = false
 
   private var databinding: ViewDataBinding? = null
 
   private lateinit var versionTextView: TextView
 
-  val androidViewModelProvider by androidViewModelProvider { this }
+  private lateinit var viewRoot: View
+
+  val androidViewModelProvider by androidViewModelProvider { this.application }
   inline fun <reified VM : AndroidViewModel> androidScopeViewModel(): Lazy<VM> {
     return LazyImpl {
       androidViewModelProvider.get(VM::class.java)
@@ -53,14 +51,6 @@ abstract class BaseDataBindingActivity : AppCompatActivity() {
     }
   }
 
-  private fun ViewDataBinding.addView(view: View) {
-    if (root is ViewGroup) {
-      (root as ViewGroup).addView(view)
-    } else {
-      throw IllegalStateException("DataBinding root is not a ViewGroup")
-    }
-  }
-
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     if (!customImmersion()) {
@@ -70,21 +60,22 @@ abstract class BaseDataBindingActivity : AppCompatActivity() {
     val dataBindingImpl = getDataBindingImpl()
 
     val binding: ViewDataBinding = DataBindingUtil.setContentView(this, dataBindingImpl.layoutId)
-    binding.apply {
-      bindView(this@BaseDataBindingActivity)?.forEach { _, value ->
-        if (value is DataBindingLayout) {
-          value.bindVariableParams(dataBindingImpl.variableParams)
-        }
-        addView(value)
-      }
 
+    binding.apply {
       lifecycleOwner = this@BaseDataBindingActivity
 
       dataBindingImpl.stateViewModelImpl?.let {
         setVariable(it.stateVariableId, it.stateViewModel)
+        if (binding.root is DataBindingLayout) {
+          (binding.root as DataBindingLayout).bindVariableParams(it.stateVariableId, it.stateViewModel)
+        }
       }
+
       dataBindingImpl.variableParams.forEach { key, value ->
         setVariable(key, value)
+        if (binding.root is DataBindingLayout) {
+          (binding.root as DataBindingLayout).bindVariableParams(key, value)
+        }
       }
     }
 

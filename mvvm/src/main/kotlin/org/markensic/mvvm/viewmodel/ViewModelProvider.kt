@@ -1,18 +1,18 @@
 package org.markensic.mvvm.viewmodel
 
-import android.app.Activity
+import android.app.Application
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelStoreOwner
 import com.markensic.core.framework.lazy.LazyImpl
 
-fun androidViewModelProvider(activity: () -> Activity): Lazy<ViewModelProvider> {
+fun androidViewModelProvider(app: () -> Application): Lazy<ViewModelProvider> {
   return LazyImpl {
-    val app = activity().application
-    if (app !is ViewModelStoreOwner) {
+    val application = app()
+    if (application !is ViewModelStoreOwner) {
       throw IllegalStateException("Your application is not yet implements ViewModelStoreOwner.")
     }
-    ViewModelProvider.AndroidViewModelFactory.getInstance(app).let {
-      ViewModelProvider(app as ViewModelStoreOwner, it)
+    ViewModelProvider.AndroidViewModelFactory.getInstance(application).let {
+      ViewModelProvider(application as ViewModelStoreOwner, it)
     }
   }
 }
