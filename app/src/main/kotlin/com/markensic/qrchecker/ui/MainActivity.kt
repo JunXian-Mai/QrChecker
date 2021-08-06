@@ -14,7 +14,7 @@ class MainActivity : BaseActivity() {
 
   private val activityViewModel by activityScopeViewModel<MainViewModel>()
 
-  override fun getDataBindingImpl(): DataBindingImpl =
+  override fun getDataBindingImpl() =
     DataBindingImpl(R.layout.activity_main, StateViewModelImpl(BR.vm, activityViewModel)).apply {
       addVariableParam(BR.vm, activityViewModel)
     }

@@ -1,44 +1,34 @@
 package com.markensic.qrchecker.ui.page
 
-import android.content.Context
-import android.os.Bundle
-import android.util.SparseArray
-import android.view.View
-import android.view.ViewGroup
-import com.markensic.qrchecker.R
 import com.markensic.qrchecker.ui.base.BaseFragment
-import com.markensic.qrchecker.ui.custom.MainLayoutTmp
-import com.markensic.qrchecker.viewmodel.ThirdFragmentViewModel
-import com.markensic.core.global.log.CoreLog
+import com.markensic.qrchecker.viewmodel.UserFragmentViewModel
+import com.markensic.qrchecker.R
+import com.markensic.qrchecker.BR
 import org.markensic.mvvm.databinding.DataBindingImpl
+import org.markensic.mvvm.viewmodel.StateViewModelImpl
 
 class UserFragment : BaseFragment() {
 
-  private val thirdFragmentViewModel by fragmentScopeViewModel<ThirdFragmentViewModel>()
+  private val userFragmentViewModel by fragmentScopeViewModel<UserFragmentViewModel>()
 
-  override fun getDataBindingImpl(): DataBindingImpl = DataBindingImpl(R.layout.fragment_main)
+  override fun getDataBindingImpl() = DataBindingImpl(
+    R.layout.fragment_user, StateViewModelImpl(BR.vm, userFragmentViewModel)
+  )
 
-  override fun bindView(context: Context): SparseArray<View>? {
-    val spArray = SparseArray<View>()
-    spArray.append(
-      0,
-      MainLayoutTmp(hostActivity!!).apply {
-        showTv.text = "ThirdFragment"
-
-        nextEvent.visibility = View.INVISIBLE
-
-        event.setOnClickListener {
-          sharedViewModel.changeName("Third")
-        }
-
-        eventTv.text = sharedViewModel.name.value
-
-        sharedViewModel.name.observe(this@UserFragment) {
-          CoreLog.d("ThirdFragment -> $it")
-          eventTv.text = it
-        }
-      }
-    )
-    return spArray
-  }
+//  MainLayoutTmp(hostActivity!!).apply {
+//    showTv.text = "UserFragment"
+//
+//    nextEvent.visibility = View.INVISIBLE
+//
+//    event.setOnClickListener {
+//      sharedViewModel.changeName("Third")
+//    }
+//
+//    eventTv.text = sharedViewModel.name.value
+//
+//    sharedViewModel.name.observe(this@UserFragment) {
+//      CoreLog.d("UserFragment -> $it")
+//      eventTv.text = it
+//    }
+//  }
 }

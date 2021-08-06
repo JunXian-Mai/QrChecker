@@ -13,7 +13,7 @@ class LoginFragment : BaseFragment() {
 
   private val loginState by fragmentScopeViewModel<LoginViewModel>()
 
-  override fun getDataBindingImpl(): DataBindingImpl = DataBindingImpl(R.layout.fragment_login).apply {
+  override fun getDataBindingImpl() = DataBindingImpl(R.layout.fragment_login).apply {
     addVariableParam(BR.vm, loginState)
     addVariableParam(BR.click, ClickProxy())
   }

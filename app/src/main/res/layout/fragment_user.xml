@@ -6,15 +6,11 @@
 
     <variable
       name="vm"
-      type="com.markensic.qrchecker.viewmodel.MainFragmentViewModel" />
-
-    <variable
-      name="click"
-      type="com.markensic.qrchecker.ui.page.MainFragment.ClickProxy" />
+      type="com.markensic.qrchecker.viewmodel.UserFragmentViewModel" />
 
   </data>
 
-  <com.markensic.qrchecker.ui.custom.MainLayout
+  <com.markensic.qrchecker.ui.custom.MainLayoutTmp
     android:layout_width="match_parent"
     android:layout_height="match_parent"/>
 </layout>

@@ -4,20 +4,22 @@ import android.content.Context
 import android.graphics.drawable.ColorDrawable
 import android.util.AttributeSet
 import android.view.Gravity
+import android.view.View
 import android.widget.Button
 import android.widget.TextView
 import androidx.core.view.updateMargins
 import androidx.core.view.updatePadding
-import com.markensic.qrchecker.R
 import com.markensic.core.framework.ui.*
+import com.markensic.core.global.log.CoreLog
+import com.markensic.qrchecker.R
+import com.markensic.qrchecker.viewmodel.SharedViewModel
+import org.markensic.mvvm.databinding.DataBindingLayout
 
 class MainLayoutTmp @JvmOverloads constructor(
   context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
-) : CustomLayout(context, attrs, defStyleAttr) {
+) : DataBindingLayout(context, attrs, defStyleAttr) {
 
-  init {
-    this.tag = tag ?: MainLayoutTmp::class.simpleName
-  }
+  protected val sharedViewModel by androidScopeViewModel<SharedViewModel>()
 
   val contentHeight = Display.realHeight - Ui.statusBarSize - Ui.navigationBarSize
 
@@ -36,6 +38,7 @@ class MainLayoutTmp @JvmOverloads constructor(
 
   val showTv = TextView(context).apply {
     background = ColorDrawable(resources.getColor(R.color.teal_200, null))
+    text = "UserFragment"
     addView(this, matchParent, wrapContent) {
       updatePadding(left = 5.dp, right = 5.dp)
     }
@@ -44,6 +47,7 @@ class MainLayoutTmp @JvmOverloads constructor(
   val nextEvent = Button(context).apply {
     background = ColorDrawable(resources.getColor(R.color.white, null))
     text = "to next page"
+    visibility = View.INVISIBLE
     addView(this, wrapContent, wrapContent) {
       updatePadding(left = 5.dp, right = 5.dp)
       updateMargins(left = 5.dp, top = 5.dp)
@@ -53,6 +57,9 @@ class MainLayoutTmp @JvmOverloads constructor(
   val event = Button(context).apply {
     background = ColorDrawable(resources.getColor(R.color.white, null))
     text = "change SharedViewModel.name"
+    setOnClickListener {
+      sharedViewModel.changeName("User")
+    }
     addView(this, wrapContent, wrapContent) {
       updatePadding(left = 5.dp, right = 5.dp)
       updateMargins(left = 5.dp, top = 5.dp)
@@ -61,6 +68,13 @@ class MainLayoutTmp @JvmOverloads constructor(
 
   val eventTv = TextView(context).apply {
     background = ColorDrawable(resources.getColor(R.color.teal_200, null))
+    text = sharedViewModel.name.value
+
+    sharedViewModel.name.observe(this@MainLayoutTmp) {
+      CoreLog.d("UserFragment -> $it")
+      text = it
+    }
+
     addView(this, matchParent, wrapContent) {
       updatePadding(left = 5.dp, right = 5.dp)
       updateMargins(left = 5.dp, top = 5.dp)
