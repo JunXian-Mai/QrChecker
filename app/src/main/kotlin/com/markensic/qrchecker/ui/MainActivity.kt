@@ -2,11 +2,11 @@ package com.markensic.qrchecker.ui
 
 import android.os.Bundle
 import androidx.navigation.Navigation
+import com.markensic.core.global.log.CoreLog
 import com.markensic.qrchecker.BR
 import com.markensic.qrchecker.R
 import com.markensic.qrchecker.ui.base.BaseActivity
 import com.markensic.qrchecker.viewmodel.MainViewModel
-import com.markensic.core.global.log.CoreLog
 import org.markensic.mvvm.databinding.DataBindingImpl
 import org.markensic.mvvm.viewmodel.StateViewModelImpl
 

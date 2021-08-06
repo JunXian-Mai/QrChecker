@@ -1,16 +1,15 @@
 package com.markensic.core.framework.lazy
 
-import java.lang.IllegalArgumentException
-
 class LazyImpl<T>(val initializer: () -> T?) : Lazy<T> {
 
   private val lock = Any()
 
-  @Volatile var _value: T? = null
+  @Volatile
+  var _value: T? = null
 
   override val value: T
     get() {
-      if (_value == null){
+      if (_value == null) {
         synchronized(lock) {
           if (_value == null) {
             _value = initializer()

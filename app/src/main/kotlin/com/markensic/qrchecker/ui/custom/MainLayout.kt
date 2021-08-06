@@ -7,12 +7,12 @@ import android.widget.ImageView
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.view.updateMargins
 import com.markensic.core.framework.event.applyOnDebouncingClickProxy
-import com.markensic.qrchecker.R
 import com.markensic.core.framework.ui.Display
 import com.markensic.core.framework.ui.Ui
 import com.markensic.core.framework.ui.dp
 import com.markensic.core.framework.ui.matchParent
 import com.markensic.qrchecker.BR
+import com.markensic.qrchecker.R
 import com.markensic.qrchecker.ui.page.MainFragment
 import org.markensic.mvvm.databinding.DataBindingLayout
 

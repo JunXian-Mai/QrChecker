@@ -1,9 +1,9 @@
 package com.markensic.qrchecker.ui.page
 
+import com.markensic.qrchecker.BR
+import com.markensic.qrchecker.R
 import com.markensic.qrchecker.ui.base.BaseFragment
 import com.markensic.qrchecker.viewmodel.UserFragmentViewModel
-import com.markensic.qrchecker.R
-import com.markensic.qrchecker.BR
 import org.markensic.mvvm.databinding.DataBindingImpl
 import org.markensic.mvvm.viewmodel.StateViewModelImpl
 

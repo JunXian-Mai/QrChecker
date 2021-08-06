@@ -3,15 +3,15 @@ package org.markensic.mvvm.databinding
 import android.content.Context
 import android.util.AttributeSet
 import android.util.SparseArray
-import androidx.core.util.putAll
-import androidx.lifecycle.*
+import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.ViewModelProvider
 import com.markensic.core.framework.lazy.LazyImpl
 import com.markensic.core.framework.ui.CustomLayout
 import com.markensic.core.global.App
 import com.markensic.core.global.log.CoreLog
-import org.markensic.mvvm.base.BaseDataBindingActivity
 import org.markensic.mvvm.viewmodel.androidViewModelProvider
-import java.lang.IllegalArgumentException
 
 abstract class DataBindingLayout @JvmOverloads constructor(
   context: Context,
@@ -32,7 +32,7 @@ abstract class DataBindingLayout @JvmOverloads constructor(
   private val variableParams: SparseArray<Any> = SparseArray()
 
   fun <T> variableId(variableId: Int): Lazy<T> {
-    return LazyImpl{ findVariableById(variableId) }
+    return LazyImpl { findVariableById(variableId) }
   }
 
   private fun <T> findVariableById(variableId: Int): T? {
@@ -48,7 +48,7 @@ abstract class DataBindingLayout @JvmOverloads constructor(
     }
   }
 
-  fun bindVariableParams(variableId : Int, model: Any) {
+  fun bindVariableParams(variableId: Int, model: Any) {
     variableParams.put(variableId, model)
   }
 
