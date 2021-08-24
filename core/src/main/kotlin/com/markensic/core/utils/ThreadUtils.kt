@@ -1,8 +1,8 @@
 package com.markensic.core.utils
 
 import android.os.Looper
-import com.google.common.util.concurrent.ThreadFactoryBuilder
 import com.markensic.core.framework.thread.ModifyThreadPool
+import com.markensic.core.framework.thread.ThreadFactoryBuilder
 import com.markensic.core.global.App
 import java.util.concurrent.RejectedExecutionHandler
 import java.util.concurrent.ThreadPoolExecutor
