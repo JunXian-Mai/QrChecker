@@ -4,8 +4,9 @@ import android.app.Application
 import android.content.Context
 import androidx.lifecycle.ViewModelStore
 import androidx.lifecycle.ViewModelStoreOwner
+import com.markensic.core.global.stack.LibStackContext
 
-open class BaseApplication : Application(), ViewModelStoreOwner {
+abstract class BaseMvvmApplication : Application(), ViewModelStoreOwner, LibStackContext {
   private lateinit var viewModelStore: ViewModelStore
 
   override fun attachBaseContext(base: Context?) {
