@@ -17,7 +17,7 @@ val Float.dp
     TypedValue.COMPLEX_UNIT_DIP,
     this,
     Resources.getSystem().displayMetrics
-  ).toInt()
+  )
 
 val Int.sp
   get() =
