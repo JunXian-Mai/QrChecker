@@ -9,7 +9,7 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ViewModelProvider
 import com.markensic.core.framework.lazy.LazyImpl
 import com.markensic.core.framework.ui.CustomLayout
-import com.markensic.core.global.App
+import com.markensic.core.global.CoreApp
 import com.markensic.core.global.log.CoreLog
 import org.markensic.mvvm.viewmodel.androidViewModelProvider
 
@@ -20,7 +20,7 @@ abstract class DataBindingLayout @JvmOverloads constructor(
 ) : CustomLayout(context, attrs, defStyleAttr), LifecycleOwner {
 
   val androidViewModelProvider: ViewModelProvider by androidViewModelProvider {
-    App.sApplication
+    CoreApp.sApplication
   }
 
   inline fun <reified VM : AndroidViewModel> androidScopeViewModel(): Lazy<VM> {

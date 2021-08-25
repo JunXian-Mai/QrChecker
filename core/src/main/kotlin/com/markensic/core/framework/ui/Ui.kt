@@ -9,7 +9,7 @@ import android.view.View
 import android.view.ViewTreeObserver
 import android.view.Window
 import android.view.WindowManager
-import com.markensic.core.global.App
+import com.markensic.core.global.CoreApp
 
 object Ui {
 
@@ -59,7 +59,7 @@ object Ui {
                 res.getDimensionPixelSize(it)
               }
             }
-            (App.sApplication.getSystemService(Context.WINDOW_SERVICE) as WindowManager).apply {
+            (CoreApp.sApplication.getSystemService(Context.WINDOW_SERVICE) as WindowManager).apply {
               val windowFullHeight = Display.realHeight
               val windowHeight = defaultDisplay.height
               var remainEffectHeight = windowFullHeight - windowHeight

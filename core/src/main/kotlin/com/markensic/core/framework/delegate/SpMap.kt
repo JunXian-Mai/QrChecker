@@ -1,11 +1,11 @@
 package com.markensic.core.framework.delegate
 
 import android.content.Context
-import com.markensic.core.global.App
+import com.markensic.core.global.CoreApp
 
 class SpMap(spFileName: String, mode: Int = Context.MODE_PRIVATE) : HashMap<String, Any?>() {
 
-  private val sp = App.sApplication.getSharedPreferences(spFileName, mode).also {
+  private val sp = CoreApp.sApplication.getSharedPreferences(spFileName, mode).also {
     it.all.forEach { entry ->
       super.put(entry.key, entry.value)
     }

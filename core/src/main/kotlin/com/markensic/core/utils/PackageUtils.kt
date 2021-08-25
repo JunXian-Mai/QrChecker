@@ -1,9 +1,9 @@
 package com.markensic.core.utils
 
-import com.markensic.core.global.App
+import com.markensic.core.global.CoreApp
 
 object PackageUtils {
-  val packageName = App.sApplication.packageName
+  val packageName = CoreApp.sApplication.packageName
 
-  val versionName = App.sApplication.packageManager.getPackageInfo(packageName, 0).versionName
+  val versionName = CoreApp.sApplication.packageManager.getPackageInfo(packageName, 0).versionName
 }

@@ -3,7 +3,7 @@ package com.markensic.core.utils
 import android.os.Looper
 import com.markensic.core.framework.thread.ModifyThreadPool
 import com.markensic.core.framework.thread.ThreadFactoryBuilder
-import com.markensic.core.global.App
+import com.markensic.core.global.CoreApp
 import java.util.concurrent.RejectedExecutionHandler
 import java.util.concurrent.ThreadPoolExecutor
 import java.util.concurrent.TimeUnit
@@ -24,7 +24,7 @@ object ThreadUtils {
     if (Looper.myLooper() == Looper.getMainLooper()) {
       action()
     } else {
-      App.currentActivity.runOnUiThread {
+      CoreApp.topActivity.runOnUiThread {
         action()
       }
     }

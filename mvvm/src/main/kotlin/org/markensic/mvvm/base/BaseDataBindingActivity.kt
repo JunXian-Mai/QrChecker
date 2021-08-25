@@ -17,7 +17,7 @@ import com.markensic.core.framework.lazy.LazyImpl
 import com.markensic.core.framework.ui.Ui
 import com.markensic.core.framework.ui.dp
 import com.markensic.core.framework.ui.sp
-import com.markensic.core.global.App
+import com.markensic.core.global.CoreApp
 import com.markensic.core.utils.PackageUtils
 import org.markensic.mvvm.R
 import org.markensic.mvvm.databinding.DataBindingImpl
@@ -81,7 +81,7 @@ abstract class BaseDataBindingActivity : AppCompatActivity() {
 
     databinding = binding
 
-    if (App.isDebug) {
+    if (CoreApp.isDebug) {
       addDebugVersionTip()
     }
   }
@@ -93,14 +93,14 @@ abstract class BaseDataBindingActivity : AppCompatActivity() {
   }
 
   private fun addDebugVersionTip() {
-    versionTextView = TextView(App.sApplication).apply {
+    versionTextView = TextView(CoreApp.sApplication).apply {
       alpha = 0.9f
       textSize = 5.sp
       setBackgroundColor(Color.TRANSPARENT)
       typeface = Typeface.defaultFromStyle(Typeface.ITALIC)
-      setTextColor(App.sApplication.resources.getColor(R.color.snow_white))
+      setTextColor(CoreApp.sApplication.resources.getColor(R.color.snow_white))
       text = String.format(
-        App.sApplication.resources.getString(R.string.debug_tip),
+        CoreApp.sApplication.resources.getString(R.string.debug_tip),
         PackageUtils.versionName
       )
       setPadding(0, 0, 25.dp.toInt(), 0)

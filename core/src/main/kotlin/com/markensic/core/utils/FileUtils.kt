@@ -5,7 +5,7 @@ import android.net.Uri
 import android.os.Build
 import android.os.FileUtils
 import android.provider.OpenableColumns
-import com.markensic.core.global.App
+import com.markensic.core.global.CoreApp
 import com.markensic.core.global.log.CoreLog
 import okio.buffer
 import okio.sink
@@ -15,7 +15,7 @@ import java.net.URI
 
 object FileUtils {
   val sDefaultPath =
-    App.sApplication.getExternalFilesDir(null)!!.absolutePath + File.separator
+    CoreApp.sApplication.getExternalFilesDir(null)!!.absolutePath + File.separator
 
   private fun create(path: String): File {
     return File(path).also {
@@ -104,7 +104,7 @@ object FileUtils {
       }
     } else if (uri.scheme == ContentResolver.SCHEME_CONTENT) {
       if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-        val contentResolver = App.sApplication.contentResolver
+        val contentResolver = CoreApp.sApplication.contentResolver
         val cursor = contentResolver.query(uri, null, null, null, null)
         cursor?.use {
           if (it.moveToFirst()) {
@@ -113,7 +113,7 @@ object FileUtils {
               it.getString(it.getColumnIndex(OpenableColumns.DISPLAY_NAME))
                 .let { fileName ->
                   if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                    val file = File("${App.sApplication.externalCacheDir!!.absolutePath}/$fileName")
+                    val file = File("${CoreApp.sApplication.externalCacheDir!!.absolutePath}/$fileName")
                     val fos = FileOutputStream(file)
                     uriInputStream.use {
                       fos.use {
@@ -122,7 +122,7 @@ object FileUtils {
                     }
                     file
                   } else {
-                    val file = File(App.sApplication.filesDir, fileName)
+                    val file = File(CoreApp.sApplication.filesDir, fileName)
                     uriInputStream.use {
                       FileOutputStream(file).sink().buffer().use { sink ->
                         sink.write(uriInputStream.readBytes())

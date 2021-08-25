@@ -3,7 +3,7 @@ package com.markensic.core.global.log
 import android.os.Build
 import android.os.DeadSystemException
 import com.markensic.core.framework.delegate.SpMap
-import com.markensic.core.global.App
+import com.markensic.core.global.CoreApp
 import com.markensic.core.global.log.Timber.Forest.plant
 import com.markensic.core.utils.FileUtils
 import com.markensic.core.utils.ThreadUtils
@@ -23,7 +23,7 @@ object CoreLog {
   var forceEnable = false
     set(value) {
       field = value
-      if (value && !App.isDebug) {
+      if (value && !CoreApp.isDebug) {
         initLog()
       }
     }
@@ -38,7 +38,7 @@ object CoreLog {
 
   private fun isEnable(): Boolean {
     Utils.checkLogFileVailTime()
-    return forceEnable || App.isDebug
+    return forceEnable || CoreApp.isDebug
   }
 
   private fun printlnLog(
@@ -214,7 +214,7 @@ object CoreLog {
           if (it is String) {
             it
           } else {
-            App.sApplication.getExternalFilesDir(null)!!.absolutePath + File.separator + "logFolder" + File.separator
+            CoreApp.sApplication.getExternalFilesDir(null)!!.absolutePath + File.separator + "logFolder" + File.separator
           }
         }
       }

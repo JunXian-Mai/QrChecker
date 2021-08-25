@@ -3,7 +3,7 @@ package com.markensic.core.framework.ui
 import android.content.Context
 import android.util.DisplayMetrics
 import android.view.WindowManager
-import com.markensic.core.global.App.sApplication
+import com.markensic.core.global.CoreApp.sApplication
 
 object Display {
 

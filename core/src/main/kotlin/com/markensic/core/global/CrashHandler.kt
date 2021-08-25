@@ -14,7 +14,7 @@ import kotlin.system.exitProcess
 object CrashHandler : Thread.UncaughtExceptionHandler {
 
   private val path =
-    App.sApplication.getExternalFilesDir(null)!!.absolutePath + File.separator + "crashFolder" + File.separator
+    CoreApp.sApplication.getExternalFilesDir(null)!!.absolutePath + File.separator + "crashFolder" + File.separator
 
   private val systemHandler = Thread.getDefaultUncaughtExceptionHandler()
 
@@ -38,9 +38,9 @@ object CrashHandler : Thread.UncaughtExceptionHandler {
 
   private fun collectDeviceInfo(): String {
     return StringBuilder().also { builder ->
-      App.sApplication.packageManager?.also { pm ->
+      CoreApp.sApplication.packageManager?.also { pm ->
         try {
-          val packInfo = pm.getPackageInfo(App.sApplication.packageName, PackageManager.GET_ACTIVITIES)
+          val packInfo = pm.getPackageInfo(CoreApp.sApplication.packageName, PackageManager.GET_ACTIVITIES)
           val code: Int by lazy {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
               packInfo.longVersionCode.toInt()
