@@ -68,7 +68,7 @@ abstract class BaseDataBindingFragment : Fragment() {
     val binding: ViewDataBinding = DataBindingUtil.inflate(inflater, dataBindingImpl.layoutId, container, false)
 
     binding.apply {
-      lifecycleOwner = this@BaseDataBindingFragment
+      lifecycleOwner = viewLifecycleOwner
 
       dataBindingImpl.stateViewModelImpl?.let {
         setVariable(it.stateVariableId, it.stateViewModel)
