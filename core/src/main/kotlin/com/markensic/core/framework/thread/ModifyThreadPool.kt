@@ -4,6 +4,7 @@ import java.util.concurrent.RejectedExecutionHandler
 import java.util.concurrent.ThreadFactory
 import java.util.concurrent.ThreadPoolExecutor
 import java.util.concurrent.TimeUnit
+import java.util.concurrent.locks.ReentrantReadWriteLock
 
 class ModifyThreadPool(
   corePoolSize: Int,
@@ -29,19 +30,38 @@ class ModifyThreadPool(
     allowCoreThreadTimeOut(true)
   }
 
+  private val lock = ReentrantReadWriteLock()
+
+  var coreGrowthRate = 2f
+
+  var queueGrowthRate = 2f
+
   override fun execute(command: Runnable?) {
-    if (queue is ResizableCapacityLinkedBlockingQueue) {
-      (queue as ResizableCapacityLinkedBlockingQueue<Runnable>).also { queue ->
-        if (queue.remainingCapacity() - corePoolSize <= 0) {
-          val allSize = queue.size + queue.remainingCapacity()
-          if (!isSingle) {
-            corePoolSize *= 2
-            maximumPoolSize = corePoolSize
-            prestartAllCoreThreads()
-            queue.setCapacity(allSize * maximumPoolSize)
-          } else {
-            queue.setCapacity(allSize * 2)
+    (queue as ResizableCapacityLinkedBlockingQueue<Runnable>).also { queue ->
+      lock.readLock().lock()
+      var isFull = queue.remainingCapacity() == 0
+      lock.readLock().unlock()
+
+      if (isFull) {
+        try {
+          lock.writeLock().lock()
+          isFull = queue.remainingCapacity() == 0
+          if (isFull) {
+            val allQueueSize = queue.size + queue.remainingCapacity()
+            if (!isSingle) {
+              corePoolSize = (corePoolSize * coreGrowthRate).toInt() + 1
+              maximumPoolSize = corePoolSize
+              prestartAllCoreThreads()
+              queue.setCapacity((allQueueSize * queueGrowthRate).toInt() + 1)
+            } else {
+              corePoolSize = 1
+              maximumPoolSize = 1
+              prestartAllCoreThreads()
+              queue.setCapacity((allQueueSize * queueGrowthRate * coreGrowthRate).toInt() + 1)
+            }
           }
+        } finally {
+          lock.writeLock().unlock()
         }
       }
     }
